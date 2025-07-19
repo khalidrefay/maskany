@@ -13,24 +13,29 @@ return new class extends Migration
     {
         Schema::create('project_items', function (Blueprint $table) {
             $table->id();
-            $table->string('city');
-            $table->string('district');
-            $table->float('land_area');
-            $table->string('design');
-            $table->string('finishing');
-            $table->string('shape');
-            $table->integer('floors')->nullable();
-            $table->integer('bedrooms')->nullable();
-            $table->integer('living_rooms')->nullable();
-            $table->integer('bathrooms')->nullable();
-            $table->integer('kitchens')->nullable();
-            $table->integer('annexes')->nullable();
-            $table->integer('parking')->nullable();
-            $table->float('required_area')->nullable();
-            $table->boolean('terms')->default(false);
-            $table->boolean('contact')->default(false);
+            $table->string('title')->nullable();
+            $table->text('description')->nullable();
+            $table->string('city')->nullable();
+            $table->string('district')->nullable();
+            $table->decimal('land_area', 10, 2)->nullable();
+            $table->string('design')->default('modern');
+            $table->string('finishing')->default('standard');
+            $table->string('shape')->default('regular');
+            $table->integer('floors')->default(1);
+            $table->integer('bedrooms')->default(0);
+            $table->integer('bathrooms')->default(0);
+            $table->integer('living_rooms')->default(0);
+            $table->integer('kitchens')->default(0);
+            $table->integer('annexes')->default(0);
+            $table->integer('parking')->default(0);
+            $table->decimal('required_area', 10, 2)->nullable();
+            $table->text('terms')->nullable();
+            $table->string('contact')->nullable();
             $table->bigInteger('estimate')->nullable();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
+            $table->string('location')->nullable();
+            $table->decimal('budget', 12, 2)->nullable();
+            $table->enum('status', ['open', 'in_progress', 'completed', 'cancelled'])->default('open');
             $table->timestamps();
         });
     }

@@ -640,9 +640,12 @@
                                     <div class="actions-section">
                                         <div class="status-title">{{ __('labels.order_status') }}</div>
                                         <div class="status-badge">{{ __('labels.status') }}</div>
-                                        <button class="edit-btn">
-                                            <span>{{ __('buttons.browse_project') }}</span>
-                                        </button>
+                                        <!-- زر تعديل العرض -->
+                                        <a href="{{ route('consultant.proposals.edit', $proposal->id) }}" class="edit-btn">
+                                            <span>تعديل العرض</span>
+                                            <i class="bi bi-pencil"></i>
+                                        </a>
+                                        <!-- باقي الأزرار -->
                                         <button class="publish-btn">
                                             <span>{{ __('buttons.edit_display') }}</span>
                                             <img src="https://example.com/vector-icon.svg" alt="{{ __('alt.vector') }}"

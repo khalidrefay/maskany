@@ -24,6 +24,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ asset('assets/css/main.css') }}">
     <style>
         * {
             margin: 0;
@@ -379,5 +380,21 @@
 
     @include('layouts.footer')
     @yield('js')
+
+    <script>
+    window.openMessagesWith = function(userId) {
+        if (typeof toggleMessagesDropdown === 'function') {
+            toggleMessagesDropdown();
+            setTimeout(function() {
+                var receiverSelect = document.getElementById('quickReceiver');
+                if (receiverSelect) receiverSelect.value = userId;
+                var messageInput = document.getElementById('quickMessageContent');
+                if (messageInput) messageInput.focus();
+            }, 200);
+        } else {
+            alert('رسائل الهيدر غير متاحة في هذه الصفحة!');
+        }
+    }
+    </script>
 </body>
 </html>

@@ -16,10 +16,10 @@ class DashboardController extends Controller
     public function index()
     {
         $user = Auth::user();
-        // $totalProjects = Project::where('client_id', $user->id)->count();
-        // $activeProjects = Project::where('client_id', $user->id)->where('status', 'active')->count();
-        // $completedProjects = Project::where('client_id', $user->id)->where('status', 'completed')->count();
-        return view('user.dashboard');
+        $totalProjects = Project::where('user_id', $user->id)->count();
+        $activeProjects = Project::where('user_id', $user->id)->where('status', 'active')->count();
+        $completedProjects = Project::where('user_id', $user->id)->where('status', 'completed')->count();
+        return view('user.dashboard', compact('totalProjects', 'activeProjects', 'completedProjects'));
         // return view('user.dashboard');
     }
 }

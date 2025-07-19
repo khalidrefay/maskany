@@ -78,6 +78,9 @@
     [dir="rtl"] .space-x-reverse {
         --tw-space-x-reverse: 1;
     }
+    .min-w-[160px] { min-width: 160px; }
+    .min-w-[140px] { min-width: 140px; }
+    .min-w-[180px] { min-width: 180px; }
 </style>
 @endsection
 
@@ -170,10 +173,12 @@
                                 </div>
                                 <div class="flex justify-between items-center mt-4">
                                     <span class="text-sm text-gray-600">{{ __('projects.offers_count') }}: {{ $projectItem->offers_count }}</span>
+                                    @if(auth()->user()->role == 'consultant' && !$projectItem->proposals->where('consultant_id', auth()->id())->count())
                                     <button class="bg-blue-600 text-white text-sm font-medium rounded-lg px-4 py-2 hover:bg-blue-700 transition duration-200 open-offer-modal-btn"
                                         data-project-id="{{ $projectItem->id }}">
                                         {{ __('projects.submit_offer') }}
                                     </button>
+                                    @endif
                                     <span class="text-xs text-gray-400">{{ $projectItem->created_at->format('Y-m-d') }}</span>
                                 </div>
                             </div>
@@ -222,106 +227,56 @@
                 <!-- Step 1: Offers -->
                 <div id="step-1" class="step-panel hidden">
                     <div class="space-y-6">
-                        {{--  @forelse($offers as $offer)  --}}
-                        <div class="bg-white shadow-lg rounded-xl">
-                            <div class="flex flex-col lg:grid lg:grid-cols-12">
-                                <!-- Consultant Info -->
-                                <div class="lg:col-span-3 bg-white p-4 text-center rounded flex flex-col items-center">
-                                    <img src="https://randomuser.me/api/portraits/men/32.jpg"
-                                         alt="{{ __('projects.consultant_avatar') }}"
-                                         class="w-16 h-16 rounded-full object-cover mb-2">
-                                    <div class="consultant-rating flex justify-center space-x-1 space-x-reverse mb-1">
-                                        {{--  @for($i = 0; $i < $offer->rating; $i++)
-                                            <i class="fas fa-star"></i>
-                                        @endfor  --}}
-                                    </div>
-                                    <div class="text-lg lg:text-xl font-medium text-gray-900 mb-1">
-                                        {{  __('projects.default_consultant') }}
-                                    </div>
-                                    <div class="text-sm text-gray-500">
-                                        {{ __('projects.license') }}:
-                                    </div>
-                                </div>
-
-                                <!-- Offer Details -->
-                                <div class="lg:col-span-7 bg-white p-4 rounded md:pt-5">
-                                    <div class="mb-4">
-                                        <h4 class="font-bold text-gray-800 mb-2">{{ __('projects.offer_details') }}</h4>
-                                        <p class="text-gray-700"></p>
-                                    </div>
-                                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                                        <!-- Offer File 1 -->
-                                        <div class="bg-white border border-blue-500 rounded-lg p-3 text-sm font-semibold flex flex-col justify-between">
-                                            <div class="flex gap-2 items-start mb-4">
-                                                <i class="fas fa-file-alt mt-1 text-gray-500"></i>
-                                                <div>
-                                                    <div class="text-gray-700 text-sm font-bold leading-tight">
-                                                        {{ __('projects.architectural_plan') }}
-                                                    </div>
-                                                    <p class="text-gray-500 text-sm font-semibold">2.4 MB</p>
-                                                </div>
+                        @foreach($projects as $projectItem)
+                            @if(auth()->id() == $projectItem->user_id)
+                            @foreach($projectItem->proposals as $proposal)
+                                    <div class="flex flex-row-reverse gap-4 items-stretch bg-white shadow-lg rounded-xl mb-4 p-4 border">
+                                        <!-- بيانات الاستشاري -->
+                                        <div class="flex flex-col items-center justify-center min-w-[180px] border-l pl-4">
+                                            <img src="{{ $proposal->consultant->image ? asset('storage/' . $proposal->consultant->image) : 'https://randomuser.me/api/portraits/men/32.jpg' }}" alt="صورة الاستشاري" class="w-14 h-14 rounded-full object-cover mb-2">
+                                            <div class="font-bold text-base mb-1">{{ $proposal->consultant->first_name }} {{ $proposal->consultant->last_name }}</div>
+                                            <div class="text-xs text-gray-500 mb-1">الحمد للاستشارات الهندسية</div>
+                                            <div class="text-xs text-gray-400 mb-1">رقم الترخيص: 8797415</div>
+                                            <div class="flex items-center mt-1">
+                                                <span class="text-yellow-400 mr-1">
+                                                    @for($i = 0; $i < 5; $i++)
+                                                        <i class="fas fa-star"></i>
+                                                    @endfor
+                                                </span>
                                             </div>
-                                            <button class="offer-download bg-purple-100 text-blue-600 text-base font-semibold py-2 rounded-lg flex items-center gap-2 justify-center md:mt-6 cursor-pointer">
-                                                <span class="text-base font-medium">{{ __('projects.download') }}</span>
-                                                <i class="fas fa-download"></i>
-                                            </button>
                                         </div>
-
-                                        <!-- Offer File 2 -->
-                                        <div class="bg-white border border-blue-500 rounded-lg p-3 text-sm font-semibold flex flex-col justify-between">
-                                            <div class="flex gap-2 items-start mb-4">
-                                                <i class="fas fa-file-alt mt-1 text-gray-500"></i>
-                                                <div>
-                                                    <div class="text-gray-700 text-sm font-bold leading-tight">
-                                                        {{ __('projects.structural_plan') }}
-                                                    </div>
-                                                    <p class="text-gray-500 text-sm font-semibold">1.8 MB</p>
+                                        <!-- بطاقات الملفات -->
+                                        <div class="flex flex-1 gap-3 flex-wrap items-center justify-center">
+                                            @php
+                                                $files = [
+                                                    ['label' => 'مخطط البناء', 'file' => $proposal->design_plans[0] ?? null, 'size' => '500 KB'],
+                                                    ['label' => 'العرض الفني', 'file' => $proposal->design_plans[1] ?? null, 'size' => '300 KB'],
+                                                    ['label' => 'الكلفة التقديرية للمشروع', 'file' => $proposal->materials_list ?? null, 'size' => '200 KB'],
+                                                ];
+                                            @endphp
+                                            @foreach($files as $f)
+                                                <div class="border rounded-lg p-3 text-center min-w-[160px] bg-white shadow-sm flex flex-col items-center">
+                                                    <div class="font-bold mb-1">{{ $f['label'] }}</div>
+                                                    <div class="text-xs text-gray-500 mb-2">{{ $f['size'] }}</div>
+                                                    @if($f['file'] && (auth()->id() == $projectItem->user_id || (auth()->user()->role == 'contractor' && $projectItem->contractor_id == auth()->id() && $proposal->status == 'accepted')))
+                                                        <a href="{{ asset('storage/' . $f['file']) }}" class="text-blue-600 flex items-center gap-1 border border-blue-100 rounded px-3 py-1 hover:bg-blue-50 transition" download>
+                                                            <i class="fas fa-download"></i> تنزيل
+                                                        </a>
+                                                    @else
+                                                        <span class="text-gray-400">غير متاح</span>
+                                            @endif
                                                 </div>
-                                            </div>
-                                            <button class="offer-download bg-purple-100 text-blue-600 text-base font-semibold py-2 rounded-lg flex items-center gap-2 justify-center md:mt-6 cursor-pointer">
-                                                <span class="text-base font-medium">{{ __('projects.download') }}</span>
-                                                <i class="fas fa-download"></i>
-                                            </button>
+                                            @endforeach
                                         </div>
-
-                                        <!-- Offer File 3 -->
-                                        <div class="bg-white border border-blue-500 rounded-lg p-3 text-sm font-semibold flex flex-col justify-between">
-                                            <div class="flex gap-2 items-start mb-4">
-                                                <i class="fas fa-file-alt mt-1 text-gray-500"></i>
-                                                <div>
-                                                    <div class="text-gray-700 text-sm font-bold leading-tight">
-                                                        {{ __('projects.electrical_plan') }}
-                                                    </div>
-                                                    <p class="text-gray-500 text-sm font-semibold">3.2 MB</p>
-                                                </div>
-                                            </div>
-                                            <button class="offer-download bg-purple-100 text-blue-600 text-base font-semibold py-2 rounded-lg flex items-center gap-2 justify-center md:mt-6 cursor-pointer">
-                                                <span class="text-base font-medium">{{ __('projects.download') }}</span>
-                                                <i class="fas fa-download"></i>
-                                            </button>
+                                        <!-- أزرار القبول والتواصل -->
+                                        <div class="flex flex-col gap-2 min-w-[140px] items-center justify-center border-r pr-4">
+                                            <button class="bg-green-500 text-white rounded px-4 py-2 font-bold hover:bg-green-600 transition mb-2">قبول العرض</button>
+                                            <a href="mailto:{{ $proposal->consultant->email }}" class="bg-white border border-green-200 text-green-700 rounded px-4 py-2 font-bold text-center hover:bg-green-50 transition">تواصل مع الاستشاري</a>
                                         </div>
                                     </div>
-                                </div>
-
-                                <!-- Actions -->
-                                <div class="lg:col-span-2 flex flex-col gap-3 p-4">
-                                    <button class="accept-offer bg-green-600 text-white text-sm lg:text-base font-medium rounded-lg w-full px-4 py-3 cursor-pointer"
-                                        data-offer-id="">
-                                        {{ __('projects.accept_offer') }}
-                                    </button>
-                                    <button class="bg-green-100 text-gray-900 text-sm font-medium rounded-lg w-full px-4 py-3 cursor-pointer">
-                                        {{ __('projects.contact_consultant') }}
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        {{--  @empty  --}}
-                        <div class="bg-white shadow-lg rounded-xl p-6 text-center">
-                            <i class="fas fa-inbox text-gray-400 text-5xl mb-4"></i>
-                            <h3 class="text-lg font-medium text-gray-700 mb-2">{{ __('projects.no_offers_title') }}</h3>
-                            <p class="text-gray-500">{{ __('projects.no_offers_message') }}</p>
-                        </div>
-                        {{--  @endforelse  --}}
+                                @endforeach
+                            @endif
+                            @endforeach
                     </div>
                 </div>
 

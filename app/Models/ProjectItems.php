@@ -8,7 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class ProjectItems extends Model
 {
     use HasFactory;
+
     protected $fillable = [
+        'title',
+        'description',
         'city',
         'district',
         'land_area',
@@ -17,8 +20,8 @@ class ProjectItems extends Model
         'shape',
         'floors',
         'bedrooms',
-        'living_rooms',
         'bathrooms',
+        'living_rooms',
         'kitchens',
         'annexes',
         'parking',
@@ -27,9 +30,43 @@ class ProjectItems extends Model
         'contact',
         'estimate',
         'user_id',
+        'location',
+        'budget',
+        'status'
     ];
+
+    protected $casts = [
+        'land_area' => 'decimal:2',
+        'required_area' => 'decimal:2',
+        'budget' => 'decimal:2',
+        'estimate' => 'integer',
+        'floors' => 'integer',
+        'bedrooms' => 'integer',
+        'bathrooms' => 'integer',
+        'living_rooms' => 'integer',
+        'kitchens' => 'integer',
+        'annexes' => 'integer',
+        'parking' => 'integer'
+    ];
+
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function proposals()
+    {
+        return $this->hasMany(ProjectProposal::class, 'project_id');
+    }
+
+    public function getStatusTextAttribute()
+    {
+        return match($this->status) {
+            'open' => 'مفتوح',
+            'in_progress' => 'قيد التنفيذ',
+            'completed' => 'مكتمل',
+            'cancelled' => 'ملغي',
+            default => 'غير معروف'
+        };
     }
 }

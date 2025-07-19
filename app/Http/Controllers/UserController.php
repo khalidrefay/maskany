@@ -11,10 +11,17 @@ class UserController extends Controller
     public function dashboard()
     {
         $user = Auth::user();
-        $totalProjects = Project::where('client_id', $user->id)->count();
-        $activeProjects = Project::where('client_id', $user->id)->where('status', 'active')->count();
-        $completedProjects = Project::where('client_id', $user->id)->where('status', 'completed')->count();
-        return view('user.dashboard', compact('totalProjects', 'activeProjects', 'completedProjects'));
+        $projects = \App\Models\Project::where('user_id', $user->id)->get();
+        $totalProjects = $projects->count();
+        $activeProjects = $projects->where('status', 'active')->count();
+        $completedProjects = $projects->where('status', 'completed')->count();
+
+        // جلب عروض الاستشاريين
+        $consultantOffers = \App\Models\ProjectProposal::whereIn('project_id', $projects->pluck('id'))->with('consultant', 'project')->latest()->get();
+        // جلب عروض المقاولين/الموردين
+        $contractorOffers = \App\Models\ProjectOffer::whereIn('project_id', $projects->pluck('id'))->with('user', 'project')->latest()->get();
+
+        return view('user.dashboard', compact('totalProjects', 'activeProjects', 'completedProjects', 'consultantOffers', 'contractorOffers'));
     }
 
     public function editProfile()
@@ -23,4 +30,3 @@ class UserController extends Controller
         return view('user.edit-profile', compact('user'));
     }
 }
- 

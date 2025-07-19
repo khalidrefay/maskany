@@ -27,4 +27,24 @@ class Project extends Model
     {
         return $this->hasMany(ProjectStage::class);
     }
+
+    public function proposals()
+    {
+        return $this->hasMany(ProjectProposal::class);
+    }
+
+    public function items()
+    {
+        return $this->hasMany(\App\Models\ProjectItems::class, 'project_id');
+    }
+
+    public function getStatusTextAttribute()
+    {
+        return match($this->status) {
+            'pending' => 'معلق',
+            'accepted' => 'مقبول',
+            'rejected' => 'مرفوض',
+            default => 'غير معروف'
+        };
+    }
 }

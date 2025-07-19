@@ -190,6 +190,7 @@
                     <option value="user" {{ old('role') == 'user' ? 'selected' : '' }}>{{ __('messages.auth.register.roles.user') }}</option>
                     <option value="consultant" {{ old('role') == 'consultant' ? 'selected' : '' }}>{{ __('messages.auth.register.roles.consultant') }}</option>
                     <option value="contractor" {{ old('role') == 'contractor' ? 'selected' : '' }}>{{ __('messages.auth.register.roles.contractor') }}</option>
+                    <option value="supplier" {{ old('role') == 'supplier' ? 'selected' : '' }}>{{ __('messages.auth.register.roles.supplier') }}</option>
                 </select>
                 @error('role')
                     <span class="error-message">{{ $message }}</span>

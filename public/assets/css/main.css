@@ -1,0 +1,1004 @@
+/* ملف CSS موحد - main.css */
+
+/* --- بداية الأكواد المنقولة من style.css --- */
+
+:root {
+    --primary-color: #2563eb;
+    --secondary-color: #1e40af;
+    --success-color: #059669;
+    --warning-color: #d97706;
+    --info-color: #0891b2;
+    --light-color: #f8fafc;
+    --dark-color: #1e293b;
+}
+
+body {
+    font-family: 'Cairo', sans-serif;
+    direction: rtl;
+    text-align: right;
+}
+
+/* Hero Section */
+.hero-section {
+    background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+    min-height: 600px;
+}
+
+.hero-image::before,
+.hero-image::after {
+    content: '';
+    position: absolute;
+    border-radius: 50%;
+    opacity: 0.6;
+}
+
+.hero-image::before {
+    top: -20px;
+    right: -20px;
+    width: 96px;
+    height: 96px;
+    background: #bfdbfe;
+}
+
+.hero-image::after {
+    bottom: -20px;
+    left: -20px;
+    width: 128px;
+    height: 128px;
+    background: #c7d2fe;
+}
+
+/* Search Form */
+.search-form {
+    border: 1px solid #e2e8f0;
+}
+
+/* Feature Cards */
+.feature-card {
+    transition: all 0.3s ease;
+    border: 1px solid transparent;
+}
+
+.feature-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    border-color: var(--primary-color);
+}
+
+.feature-icon {
+    transition: transform 0.3s ease;
+}
+
+.feature-card:hover .feature-icon {
+    transform: scale(1.1);
+}
+
+/* Property Cards */
+.property-card {
+    transition: all 0.3s ease;
+}
+
+.property-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.property-card img {
+    transition: transform 0.3s ease;
+}
+
+.property-card:hover img {
+    transform: scale(1.05);
+}
+
+/* Service Cards */
+.service-card {
+    transition: all 0.3s ease;
+}
+
+.service-card:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.service-icon {
+    transition: transform 0.3s ease;
+}
+
+.service-card:hover .service-icon {
+    transform: scale(1.1);
+}
+
+/* Stats Section */
+.stats-section {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3730a3 100%);
+}
+
+.stat-icon {
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover .stat-icon {
+    transform: scale(1.1);
+}
+
+/* Navigation */
+.nav-link {
+    color: #64748b;
+    transition: color 0.3s ease;
+    text-decoration: none;
+    padding: 0.5rem 1rem;
+}
+
+.nav-link:hover {
+    color: var(--primary-color);
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-primary:hover {
+    background-color: var(--secondary-color);
+    border-color: var(--secondary-color);
+}
+
+.btn-outline-primary {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+.btn-outline-primary:hover {
+    background-color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
+/* Footer */
+footer a:hover {
+    color: white !important;
+    transition: color 0.3s ease;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .hero-section {
+        text-align: center;
+    }
+
+    .search-form .row {
+        flex-direction: column;
+    }
+
+    .hero-image::before,
+    .hero-image::after {
+        display: none;
+    }
+}
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom scrollbar for webkit browsers */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--secondary-color);
+}
+
+/* --- نهاية الأكواد المنقولة من style.css --- */
+
+/* يمكنك إضافة أي تخصيصات إضافية هنا لاحقاً */
+
+/* ============================= */
+/* === من resources/views/home.blade.php === */
+/* Custom Styles */
+.hero-section {
+    background-color: #E7E5F9;
+    padding: 100px 0;
+}
+.section-title {
+    font-weight: 700;
+    color: #333;
+}
+.section-title span {
+    color: #1E90FF;
+}
+.section-subtitle {
+    color: #808080;
+    font-weight: 500;
+}
+.btn-primary {
+    background-color: #1E90FF;
+    border-color: #1E90FF;
+}
+.steps-section {
+    background-color: white;
+    padding: 80px 0;
+}
+.step-card {
+    text-align: center;
+    margin-bottom: 30px;
+}
+.step-card img {
+    margin-bottom: 15px;
+}
+.cost-section {
+    background: linear-gradient(to bottom, #E7E5F9, #1E90FF);
+    padding: 100px 0;
+}
+.cost-step {
+    position: relative;
+    margin-bottom: 20px;
+}
+.cost-step-number {
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    background-color: #4361EE;
+    color: white;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+}
+.about-section {
+    background-color: #F3F3F3;
+    padding: 80px 0;
+    text-align: center;
+}
+.stat-card {
+    background-color: white;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 30px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.stat-icon {
+    background-color: #4361EE;
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 15px;
+}
+.testimonials-section {
+    padding: 80px 0;
+    background-color: white;
+}
+.testimonial-card {
+    background-color: white;
+    border-radius: 15px;
+    padding: 40px;
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    position: relative;
+}
+.testimonial-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+}
+@media (min-width: 992px) {
+    .cost-image {
+        margin-left: 80px;
+    }
+}
+
+/* ============================= */
+/* === من resources/views/welcome.blade.php === */
+/* Global Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+/* Start Project Journey Section */
+.start-journey {
+    width: 100%;
+    background-color: #E7E5F9;
+    padding-top: 9rem;
+    padding-bottom: 2rem;
+    min-height: 100vh;
+}
+.journey-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2.5rem;
+    background-color: #F7F8F8;
+    padding: 2.5rem;
+    border-radius: 2rem;
+    width: 90%;
+    margin: 0 auto;
+}
+@media (min-width: 1024px) {
+    .journey-container {
+        grid-template-columns: 2fr 1fr;
+    }
+}
+.journey-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.journey-title {
+    font-weight: 700;
+    font-size: 3rem;
+    color: #333;
+}
+.journey-title span {
+    color: #1E90FF;
+}
+.journey-subtitle {
+    font-weight: 500;
+    font-size: 1.5rem;
+    color: #808080;
+}
+.journey-image {
+    border-radius: 2rem;
+    width: 100%;
+    height: auto;
+    object-fit: contain;
+}
+@media (min-width: 1024px) {
+    .journey-image {
+        width: 83%;
+    }
+}
+/* ... (تابع بقية الأكواد من كل Blade كما في نتائج البحث) ... */
+
+/* ============================= */
+/* === من resources/views/land-exchange.blade.php === */
+:root {
+    --primary-color: #4f46e5;
+    --primary-light: #6366f1;
+    --secondary-color: #6b7280;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --danger-color: #ef4444;
+    --light-bg: #f9fafb;
+    --border-color: #e5e7eb;
+}
+body {
+    font-family: 'Tajawal', 'Segoe UI', sans-serif;
+    background-color: #f8f9fa;
+}
+.land-exchange-header {
+    background: linear-gradient(135deg, #4f46e5 0%, #6366f1 100%);
+    color: white;
+    border-radius: 0.75rem;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+.nav-tabs-container {
+    border-bottom: 2px solid var(--border-color);
+    margin-bottom: 1.5rem;
+}
+.nav-tab {
+    position: relative;
+    padding: 0.75rem 1.5rem;
+    font-weight: 600;
+    color: var(--secondary-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    background: none;
+}
+.nav-tab:hover {
+    color: var(--primary-color);
+}
+.nav-tab.active {
+    color: var(--primary-color);
+}
+.nav-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: var(--primary-color);
+    border-radius: 3px 3px 0 0;
+}
+.form-card {
+    background: white;
+    border-radius: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.property-location {
+    color: var(--secondary-color);
+    font-size: 0.875rem;
+    margin-bottom: 0.75rem;
+}
+.property-price {
+    font-weight: 700;
+    color: var(--primary-color);
+    font-size: 1.125rem;
+}
+.btn-primary {
+    background-color: var(--primary-color);
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+.btn-primary:hover {
+    background-color: var(--primary-light);
+}
+@media (max-width: 768px) {
+    .nav-tabs-container {
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 0.5rem;
+    }
+    .nav-tab {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+}
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--secondary-color);
+}
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: 1rem;
+}
+.modal-content {
+    background: white;
+    width: 100%;
+    max-width: 500px;
+    border-radius: 0.75rem;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+}
+
+/* ============================= */
+/* === من resources/views/myoffer.blade.php === */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+}
+body {
+    background-color: #f8f9fa;
+    color: #333;
+}
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
+}
+.tabs-container {
+    margin-top: 1.5rem;
+}
+.tabs-nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 2rem;
+    padding-bottom: 0.5rem;
+    overflow-x: auto;
+}
+@media (min-width: 768px) {
+    .tabs-nav {
+        flex-direction: row;
+        gap: 1.5rem;
+    }
+}
+.tab-btn {
+    position: relative;
+    padding-bottom: 0.5rem;
+    font-weight: 700;
+    font-size: 0.875rem;
+    transition: color 0.2s;
+    cursor: pointer;
+    white-space: nowrap;
+    padding-right: 2.5rem;
+    padding-left: 2.5rem;
+    color: #6C6C89;
+    border: none;
+    background: none;
+}
+@media (min-width: 768px) {
+    .tab-btn {
+        font-size: 1rem;
+    }
+}
+.tab-btn.active {
+    color: #1E90FF;
+}
+.tab-indicator {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 0.125rem;
+    transition: background-color 0.3s;
+    background-color: transparent;
+}
+.tab-btn.active .tab-indicator {
+    background-color: #1E90FF;
+}
+.tab-content {
+    display: none;
+}
+.tab-content.active {
+    display: block;
+}
+
+/* ============================= */
+/* === من resources/views/auth/login.blade.php === */
+:root {
+    --primary-color: #4361ee;
+    --primary-hover: #3a56d4;
+    --secondary-color: #f8f9fa;
+    --text-color: #2b2d42;
+    --light-text: #6c757d;
+    --border-color: #e9ecef;
+    --error-color: #ef233c;
+    --success-color: #4cc9f0;
+}
+body {
+    background-color: #f8fafc;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    line-height: 1.5;
+    color: var(--text-color);
+}
+.auth-container {
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+.auth-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+    width: 100%;
+    max-width: 420px;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+.auth-header {
+    padding: 2rem 2rem 1rem;
+    text-align: center;
+}
+.auth-logo {
+    width: 48px;
+    height: 48px;
+    margin: 0 auto 1rem;
+    display: block;
+}
+.auth-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+}
+.auth-subtitle {
+    color: var(--light-text);
+    font-size: 0.875rem;
+}
+.auth-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border-color);
+    margin: 0 2rem;
+}
+.auth-tab {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    text-align: center;
+    font-weight: 500;
+    color: var(--light-text);
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s ease;
+}
+.auth-tab.active {
+    color: var(--primary-color);
+}
+
+/* ... تابع بقية الأكواد من بقية الصفحات بنفس النمط ... */
+
+/* ============================= */
+/* === من resources/views/consultant/dashboard.blade.php و estimate-cost و submit-proposal و project-details === */
+:root {
+    --primary-color: #2c5aa0;
+    --secondary-color: #f8f9fa;
+    --accent-color: #4CAF50;
+    --text-dark: #333;
+    --text-light: #6c757d;
+    --border-color: #e9ecef;
+    --shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+}
+.dashboard-container, .step-container, .proposal-container, .project-details-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+.dashboard-header, .step-header, .proposal-header, .project-header {
+    background: white;
+    border-radius: 12px;
+    padding: 2rem;
+    margin-bottom: 2rem;
+    box-shadow: var(--shadow);
+}
+.welcome-message, .step-title, .proposal-title, .project-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+}
+.stats-grid, .project-specs {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.stat-card, .spec-card {
+    background: white;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: var(--shadow);
+    border-right: 4px solid var(--primary-color);
+    transition: var(--transition);
+}
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+.stat-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-light);
+    margin-bottom: 0.5rem;
+}
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+/* ============================= */
+/* === من resources/views/profile.blade.php === */
+body {
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    color: #495057;
+}
+.container {
+    min-height: 100vh;
+    padding-top: 10rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+@media (min-width: 768px) {
+    .container {
+        padding-top: 12rem;
+        padding-left: 2.5rem;
+        padding-right: 2.5rem;
+    }
+}
+@media (min-width: 1024px) {
+    .container {
+        margin-left: 15%;
+        margin-right: 15%;
+    }
+}
+.title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: #3A0CA3;
+    margin-bottom: 2.5rem;
+}
+.avatar {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.form-container {
+    width: 100%;
+    margin-top: 2.5rem;
+}
+.form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+@media (min-width: 768px) {
+    .form-row {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+}
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+label {
+    font-weight: 500;
+}
+input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    font-size: 1rem;
+}
+input:focus {
+    outline: none;
+    border-color: #3A0CA3;
+    box-shadow: 0 0 0 0.2rem rgba(58, 12, 163, 0.25);
+}
+.section-title {
+    font-weight: 700;
+    font-size: 2rem;
+    margin-top: 2.5rem;
+}
+
+/* ============================= */
+/* === من resources/views/timeline/line.blade.php === */
+.workflow-section {
+    background: #f7f7fd;
+    padding: 80px 0;
+}
+.workflow-title {
+    font-weight: 700;
+    color: #1E90FF;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-size: 2.2rem;
+}
+.workflow-steps {
+    max-width: 900px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+.workflow-step {
+    background: #fff;
+    border-radius: 1rem;
+    box-shadow: 0 2px 8px #e7e5f9;
+    padding: 2rem 1.5rem;
+    display: flex;
+    align-items: flex-start;
+    gap: 1.5rem;
+}
+.workflow-step-number {
+    background: #4361EE;
+    color: #fff;
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    font-weight: bold;
+    flex-shrink: 0;
+}
+.workflow-step-content {
+    flex: 1;
+}
+.workflow-step-title {
+    font-weight: 700;
+    color: #1E90FF;
+    margin-bottom: 0.3rem;
+    font-size: 1.15rem;
+}
+.workflow-step-desc {
+    color: #333;
+    font-size: 1rem;
+}
+@media (max-width: 600px) {
+    .workflow-step {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+    }
+    .workflow-step-number {
+        margin-bottom: 1rem;
+    }
+}
+
+/* ============================= */
+/* === من resources/views/project/multi-project.blade.php و add-project === */
+.active-tab {
+    color: #1E90FF;
+    position: relative;
+}
+.active-tab::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    height: 2px;
+    background-color: #1E90FF;
+}
+.progress-bar {
+    height: 4px;
+    background-color: #e5e7eb;
+    width: 100%;
+}
+.progress-bar-fill {
+    height: 100%;
+    background-color: #1E90FF;
+    transition: width 0.3s ease;
+}
+.file-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+.message-bubble {
+    max-width: 70%;
+}
+.online-dot {
+    width: 12px;
+    height: 12px;
+    bottom: 0;
+    right: 0;
+    background-color: #10B981;
+    border: 2px solid white;
+    border-radius: 50%;
+    position: absolute;
+}
+.consultant-rating i {
+    color: #F59E0B;
+}
+@media (max-width: 768px) {
+    .online-dot {
+        width: 10px;
+        height: 10px;
+    }
+}
+[dir="rtl"] .text-right {
+    text-align: right;
+}
+[dir="rtl"] .text-left {
+    text-align: left;
+}
+[dir="rtl"] .ml-4 {
+    margin-left: 0;
+    margin-right: 1rem;
+}
+[dir="rtl"] .mr-3 {
+    margin-right: 0;
+    margin-left: 0.75rem;
+}
+[dir="rtl"] .space-x-reverse {
+    --tw-space-x-reverse: 1;
+}
+.min-w-[160px] { min-width: 160px; }
+.min-w-[140px] { min-width: 140px; }
+.min-w-[180px] { min-width: 180px; }
+
+/* ============================= */
+/* === من resources/views/user/dashboard.blade.php و contractor/dashboard === */
+.dashboard-container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+.profile-header {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+}
+.profile-avatar {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: #1E90FF;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+.profile-info h1 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: #1a1a1a;
+}
+.profile-info p {
+    margin: 0.5rem 0 0;
+    color: #666;
+}
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+.stat-card {
+    background: white;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+.stat-title {
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 0.5rem;
+}
+.stat-value {
+    color: #1a1a1a;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+.profile-section {
+    background: white;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+.section-title {
+    color: #1a1a1a;
+    font-size: 1.2rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #f0f0f0;
+}
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+.info-item {
+    margin-bottom: 1rem;
+}

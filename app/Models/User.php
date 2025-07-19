@@ -70,4 +70,22 @@ class User extends Authenticatable
     {
         return "{$this->first_name} {$this->last_name}";
     }
+
+    /**
+     * Check if the user is online (based on cache).
+     */
+    public function isOnline()
+    {
+        return cache()->has('user-is-online-' . $this->id);
+    }
+
+    public function canChatWith(User $otherUser)
+    {
+        // مثال: لا يمكن الدردشة مع نفسك
+        if ($this->id === $otherUser->id) {
+            return false;
+        }
+        // يمكنك إضافة شروط أخرى هنا (مثلاً: تحقق من الحظر أو الصلاحيات)
+        return true;
+    }
 }

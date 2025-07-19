@@ -412,6 +412,49 @@
             border: 2px dashed var(--accent-color);
         }
 
+        .estimate-breakdown {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1rem 0;
+            box-shadow: var(--shadow);
+        }
+
+        .estimate-breakdown h4 {
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .breakdown-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .breakdown-item:last-child {
+            border-bottom: none;
+        }
+
+        .breakdown-item.total {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--accent-color);
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+
+        .breakdown-item span:first-child {
+            color: var(--text-dark);
+        }
+
+        .breakdown-item span:last-child {
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+
         @media (max-width: 768px) {
             .step-container {
                 padding: 1.5rem;
@@ -832,6 +875,13 @@
                 'khobar': 0.9,
                 'makkah': 1.1,
                 'medina': 1.05
+            },
+            rooms: {
+                'bedrooms': 50000,
+                'bathrooms': 30000,
+                'living_rooms': 40000,
+                'kitchens': 60000,
+                'annexes': 25000
             }
         };
 
@@ -1024,32 +1074,94 @@
                 alert('الرجاء إكمال جميع الحقول المطلوبة');
                 return;
             }
-            // Get values
+
+            // Get base values
             const finishingPrice = priceEstimates.finishing[formData.finishing] || 0;
             const designMultiplier = priceEstimates.design[formData.design] || 1;
             const shapeMultiplier = priceEstimates.shape[formData.shape] || 1;
             const cityMultiplier = priceEstimates.city[formData.city] || 1;
             const area = parseFloat(formData.landArea) || 0;
-            // Calculate estimate
+
+            // Calculate base estimate
             let estimate = finishingPrice * area * designMultiplier * shapeMultiplier * cityMultiplier;
-            // Apply additional factors
+
+            // Add room costs
+            if (formData.bedrooms) {
+                estimate += formData.bedrooms * priceEstimates.rooms.bedrooms;
+            }
+            if (formData.bathrooms) {
+                estimate += formData.bathrooms * priceEstimates.rooms.bathrooms;
+            }
+            if (formData.livingRooms) {
+                estimate += formData.livingRooms * priceEstimates.rooms.living_rooms;
+            }
+            if (formData.kitchens) {
+                estimate += formData.kitchens * priceEstimates.rooms.kitchens;
+            }
+            if (formData.annexes) {
+                estimate += formData.annexes * priceEstimates.rooms.annexes;
+            }
+
+            // Apply floor multiplier
             if (formData.floors && formData.floors > 1) {
                 estimate *= (1 + (formData.floors * 0.05));
             }
+
+            // Add parking cost
+            if (formData.parking) {
+                estimate += formData.parking * 25000; // 25,000 ريال لكل موقف سيارات
+            }
+
             // Round to nearest 1000
             estimate = Math.round(estimate / 1000) * 1000;
+
             // Display result
             estimateValue.textContent = estimate.toLocaleString('ar-SA');
             totalEstimate.style.display = 'block';
+
             // Save estimate to formData and hidden input
             formData.estimate = estimate;
             syncHiddenInputs();
+
             // Show submit button
             document.getElementById('submitBtn').style.display = 'inline-block';
+
             // Scroll to result
             totalEstimate.scrollIntoView({
                 behavior: 'smooth'
             });
+
+            // Show detailed breakdown
+            showEstimateBreakdown(estimate, finishingPrice, area, designMultiplier, shapeMultiplier, cityMultiplier);
+        }
+
+        function showEstimateBreakdown(total, finishingPrice, area, designMultiplier, shapeMultiplier, cityMultiplier) {
+            const breakdown = document.createElement('div');
+            breakdown.className = 'estimate-breakdown';
+            breakdown.innerHTML = `
+                <h4>تفاصيل التكلفة:</h4>
+                <div class="breakdown-item">
+                    <span>تكلفة التشطيب الأساسية:</span>
+                    <span>${(finishingPrice * area).toLocaleString('ar-SA')} ريال</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>معامل النمط المعماري:</span>
+                    <span>${designMultiplier}x</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>معامل شكل المبنى:</span>
+                    <span>${shapeMultiplier}x</span>
+                </div>
+                <div class="breakdown-item">
+                    <span>معامل المدينة:</span>
+                    <span>${cityMultiplier}x</span>
+                </div>
+                <div class="breakdown-item total">
+                    <span>التكلفة الإجمالية:</span>
+                    <span>${total.toLocaleString('ar-SA')} ريال</span>
+                </div>
+            `;
+            totalEstimate.parentNode.insertBefore(breakdown, totalEstimate.nextSibling);
         }
 
         // Prevent form submission unless estimate is calculated and terms are accepted

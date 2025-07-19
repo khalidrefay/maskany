@@ -61,4 +61,25 @@ class ContractorController extends Controller
 
         return back()->with('success', 'تم تقديم العرض بنجاح!');
     }
+
+    /**
+     * عرض قائمة المشاريع المرتبطة بالمقاول بعد الموافقة
+     */
+    public function projects()
+    {
+        $user = Auth::user();
+        $projects = Project::where('contractor_id', $user->id)->latest()->get();
+        return view('contractor.projects', compact('projects'));
+    }
+
+    /**
+     * عرض تفاصيل مشروع للمقاول مع ملفات الاستشاري
+     */
+    public function showProject($id)
+    {
+        $user = Auth::user();
+        $project = Project::where('contractor_id', $user->id)->where('id', $id)->firstOrFail();
+        $acceptedProposal = $project->proposals()->where('status', 'accepted')->first();
+        return view('contractor.project-details', compact('project', 'acceptedProposal'));
+    }
 }

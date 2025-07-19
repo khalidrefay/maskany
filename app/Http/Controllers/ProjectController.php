@@ -15,8 +15,23 @@ class ProjectItemsController extends Controller
     }
     public function index()
     {
-        $projects = ProjectItems::with('user')->orderBy('id', 'desc')->latest()->paginate(10);
-        // dd($projects);
+        $user = Auth::user();
+        if ($user->role === 'user') {
+            // مالك المشروع: كل مشاريعه
+            $projects = ProjectItems::with(['user', 'proposals.consultant'])
+                ->where('user_id', $user->id)
+                ->orderBy('id', 'desc')->latest()->paginate(10);
+        } elseif ($user->role === 'consultant') {
+            // استشاري: فقط المشاريع التي proposal.status = accepted له
+            $projects = ProjectItems::with(['user', 'proposals.consultant'])
+                ->whereHas('proposals', function($q) use ($user) {
+                    $q->where('consultant_id', $user->id)->where('status', 'accepted');
+                })
+                ->orderBy('id', 'desc')->latest()->paginate(10);
+        } else {
+            // غير ذلك: لا تظهر مشاريع
+            $projects = collect();
+        }
         return view('project.multi-project', compact('projects'));
     }
     public function store(Request $request)
@@ -50,7 +65,7 @@ class ProjectItemsController extends Controller
     }
     public function show($id)
     {
-        $estimates = ProjectItems::where('user_id', Auth::id())->latest()->paginate(10);
-        return view('estimate-projects.show', compact('estimates'));
+        $estimates = ProjectItems::where('user_id',$id)->latest()->paginate(10);
+        return view('', compact('estimates'));
     }
 }

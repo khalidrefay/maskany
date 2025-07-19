@@ -194,5 +194,46 @@
         </div>
         <a href="{{ route('user.profile.edit') }}" class="edit-button">{{ __('messages.user.edit_profile') }}</a>
         </div>
+
+    <!-- عروض مقدمة على مشاريعي -->
+    <div class="profile-section">
+        <h2 class="section-title">العروض المقدمة على مشاريعي</h2>
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>المشروع</th>
+                        <th>مقدم العرض</th>
+                        <th>نوع العرض</th>
+                        <th>القيمة</th>
+                        <th>الحالة</th>
+                        <th>تاريخ التقديم</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($consultantOffers as $offer)
+                        <tr>
+                            <td>{{ $offer->project->title ?? '-' }}</td>
+                            <td>{{ $offer->consultant->name ?? '-' }}</td>
+                            <td>استشاري</td>
+                            <td>{{ $offer->price ?? '-' }}</td>
+                            <td>{{ $offer->getStatusTextAttribute() }}</td>
+                            <td>{{ $offer->created_at->format('Y-m-d H:i') }}</td>
+                        </tr>
+                    @endforeach
+                    @foreach($contractorOffers as $offer)
+                        <tr>
+                            <td>{{ $offer->project->title ?? '-' }}</td>
+                            <td>{{ $offer->user->name ?? '-' }}</td>
+                            <td>مورد/مقاول</td>
+                            <td>{{ $offer->amount ?? '-' }}</td>
+                            <td>{{ $offer->status }}</td>
+                            <td>{{ $offer->created_at->format('Y-m-d H:i') }}</td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 @endsection
