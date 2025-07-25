@@ -147,29 +147,29 @@
                 {{ substr(auth()->user()->first_name, 0, 1) }}{{ substr(auth()->user()->last_name, 0, 1) }}
             @endif
         </div>
-        <div class="profile-info">
-            <h1>{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</h1>
-            <p>{{ auth()->user()->email }}</p>
-            <p>{{ auth()->user()->phone }}</p>
-            <a href="{{ route('profile.edit') }}" class="edit-button">{{ __('messages.contractor.update_photo') }}</a>
-        </div>
+       <div class="profile-info">
+    <h1>{{ auth()->user()->first_name }} {{ auth()->user()->last_name }}</h1>
+    <p>{{ auth()->user()->email }}</p>
+    <p>{{ auth()->user()->phone }}</p>
+    <a href="{{ route(auth()->user()->role . '.profile.edit') }}" class="edit-button">{{ __('messages.contractor.update_photo') }}</a>
+</div>
     </div>
 
-    <!-- Stats Grid -->
-    <div class="stats-grid">
-        <div class="stat-card">
-            <div class="stat-title">{{ __('messages.contractor.total_projects') }}</div>
-            <div class="stat-value">{{ $totalProjects }}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-title">{{ __('messages.contractor.active_projects') }}</div>
-            <div class="stat-value">{{ $activeProjects }}</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-title">{{ __('messages.contractor.completed_projects') }}</div>
-            <div class="stat-value">{{ $completedProjects }}</div>
-        </div>
+    <!-- في قسم الـ stats-grid -->
+<div class="stats-grid">
+    <a href="{{ route('contractor.offers.list') }}" class="stat-card" style="text-decoration: none; cursor: pointer;">
+        <div class="stat-title">{{ __('messages.contractor.total_projects') }}</div>
+        <div class="stat-value">{{ $totalProjects }}</div>
+    </a>
+    <div class="stat-card">
+        <div class="stat-title">{{ __('messages.contractor.active_projects') }}</div>
+        <div class="stat-value">{{ $activeProjects }}</div>
     </div>
+    <div class="stat-card">
+        <div class="stat-title">{{ __('messages.contractor.completed_projects') }}</div>
+        <div class="stat-value">{{ $completedProjects }}</div>
+    </div>
+</div>
 
     <!-- Personal Information -->
     <div class="profile-section">
@@ -191,9 +191,11 @@
                 <div class="info-label">{{ __('messages.contractor.address') }}</div>
                 <div class="info-value">{{ auth()->user()->address }}</div>
             </div>
-        </div>
-        <a href="{{ route('profile.edit') }}" class="edit-button">{{ __('messages.contractor.edit_profile') }}</a>
-    </div>
+       <div class="info-item">
+    <div class="info-label">{{ __('messages.contractor.address') }}</div>
+    <div class="info-value">{{ auth()->user()->address }}</div>
+</div>
+<a href="{{ route(auth()->user()->role . '.profile.edit') }}" class="edit-button">{{ __('messages.contractor.edit_profile') }}</a>
 
     <!-- Professional Information -->
     <div class="profile-section">

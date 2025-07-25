@@ -23,9 +23,14 @@
                         <td>{{ $project->title ?? '-' }}</td>
                         <td>{{ $project->description ?? '-' }}</td>
                         <td>
-                            @php
-                                $acceptedProposal = $project->proposals()->where('status', 'accepted')->first();
-                            @endphp
+                           @php
+    $acceptedProposal = $project->proposals()
+    ->where('status', 'accepted')
+    ->whereNotNull('final_delivery_files')
+    ->first();
+
+@endphp
+
                             {{ $acceptedProposal && $acceptedProposal->consultant ? $acceptedProposal->consultant->getFullNameAttribute() : '-' }}
                         </td>
                         <td>

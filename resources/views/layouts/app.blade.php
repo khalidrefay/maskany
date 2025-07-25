@@ -160,6 +160,22 @@
         .mobile-nav.open {
             transform: translateX(0);
         }
+        .navbar-nav .nav-link {
+    padding: 0 15px;
+    font-weight: 500;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #0d6efd;
+}
+
+.btn-primary {
+    background-color: #4f46e5;
+    border-color: #4f46e5;
+    font-weight: bold;
+    border-radius: 10px;
+}
+
 
         .mobile-nav-link {
             margin-top: 1rem;

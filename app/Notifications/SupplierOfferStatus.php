@@ -46,4 +46,15 @@ class SupplierOfferStatus extends Notification implements ShouldQueue
             'project_title' => $this->offer->project->title,
         ];
     }
+    protected $fillable = ['project_id', 'message', 'read_at'];
+
+public function project()
+{
+    return $this->belongsTo(Project::class);
+}
+
+public function markAsRead()
+{
+    $this->update(['read_at' => now()]);
+}
 }

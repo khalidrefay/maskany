@@ -1,5 +1,5 @@
 <?php
-
+//ConsultantController.php
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -172,14 +172,7 @@ class ConsultantController extends Controller
         return view('consultant.my-offers', compact('proposals'));
     }
 
-    public function myOffersView()
-    {
-        $proposals = \App\Models\ProjectProposal::where('consultant_id', auth()->id())
-            ->with('project')
-            ->latest()
-            ->get();
-        return view('consultant.my-offers', compact('proposals'));
-    }
+   
 
     public function sendMessage(Request $request)
     {
@@ -243,4 +236,64 @@ class ConsultantController extends Controller
             ], 500);
         }
     }
+
+    
+
+public function finalDeliveryForm(Project $project)
+{
+    return view('consultant.final_delivery', compact('project'));
+}
+
+
+// في الكونترولر
+public function myOffersView(Request $request)
+{
+    $query = projectProposal::with('project')
+            ->where('consultant_id', auth()->id());
+            
+    if ($request->status) {
+        $query->where('status', $request->status);
+    }
+    
+    $proposals = $query->latest()->paginate(10);
+    
+    return view('consultant.my-offers', compact('proposals'));
+}
+public function showFinalDeliveryForm($projectId)
+{
+    $project = Project::findOrFail($projectId);
+    
+    return view('consultant.final_delivery', [
+        'project' => $project
+    ]);
+}
+
+public function submitFinalDelivery(Request $request, $projectId)
+{
+    $validated = $request->validate([
+        'delivery_files' => 'required|array|min:1',
+        'delivery_files.*' => 'file|mimes:pdf,jpg,png,zip|max:2048',
+        'notes' => 'nullable|string|max:1000'
+    ]);
+
+    // رفع الملفات
+    $paths = [];
+    foreach ($request->file('delivery_files') as $file) {
+        $paths[] = $file->store('public/deliveries');
+    }
+    
+    // حفظ البيانات
+    Delivery::create([
+        'project_id' => $projectId,
+        'consultant_id' => auth()->id(),
+        'files' => json_encode($paths),
+        'notes' => $request->notes
+    ]);
+
+    return redirect()->route('consultant.dashboard')
+                   ->with('success', 'تم تسليم المشروع بنجاح');
+}
+
+
+
 }

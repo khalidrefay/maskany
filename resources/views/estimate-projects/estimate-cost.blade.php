@@ -1068,73 +1068,90 @@
             }
         }
 
-        function calculateEstimate() {
-            // Validate form
-            if (!formData.design || !formData.finishing || !formData.shape || !formData.landArea) {
-                alert('الرجاء إكمال جميع الحقول المطلوبة');
-                return;
-            }
-
-            // Get base values
-            const finishingPrice = priceEstimates.finishing[formData.finishing] || 0;
-            const designMultiplier = priceEstimates.design[formData.design] || 1;
-            const shapeMultiplier = priceEstimates.shape[formData.shape] || 1;
-            const cityMultiplier = priceEstimates.city[formData.city] || 1;
-            const area = parseFloat(formData.landArea) || 0;
-
-            // Calculate base estimate
-            let estimate = finishingPrice * area * designMultiplier * shapeMultiplier * cityMultiplier;
-
-            // Add room costs
-            if (formData.bedrooms) {
-                estimate += formData.bedrooms * priceEstimates.rooms.bedrooms;
-            }
-            if (formData.bathrooms) {
-                estimate += formData.bathrooms * priceEstimates.rooms.bathrooms;
-            }
-            if (formData.livingRooms) {
-                estimate += formData.livingRooms * priceEstimates.rooms.living_rooms;
-            }
-            if (formData.kitchens) {
-                estimate += formData.kitchens * priceEstimates.rooms.kitchens;
-            }
-            if (formData.annexes) {
-                estimate += formData.annexes * priceEstimates.rooms.annexes;
-            }
-
-            // Apply floor multiplier
-            if (formData.floors && formData.floors > 1) {
-                estimate *= (1 + (formData.floors * 0.05));
-            }
-
-            // Add parking cost
-            if (formData.parking) {
-                estimate += formData.parking * 25000; // 25,000 ريال لكل موقف سيارات
-            }
-
-            // Round to nearest 1000
-            estimate = Math.round(estimate / 1000) * 1000;
-
-            // Display result
-            estimateValue.textContent = estimate.toLocaleString('ar-SA');
-            totalEstimate.style.display = 'block';
-
-            // Save estimate to formData and hidden input
-            formData.estimate = estimate;
-            syncHiddenInputs();
-
-            // Show submit button
-            document.getElementById('submitBtn').style.display = 'inline-block';
-
-            // Scroll to result
-            totalEstimate.scrollIntoView({
-                behavior: 'smooth'
-            });
-
-            // Show detailed breakdown
-            showEstimateBreakdown(estimate, finishingPrice, area, designMultiplier, shapeMultiplier, cityMultiplier);
+ function calculateEstimate() {
+        if (isEstimateCalculated) {
+            return; // لو اتحسبت قبل كده، متحسبش تاني
         }
 
+        // Validate form
+        if (!formData.design || !formData.finishing || !formData.shape || !formData.landArea) {
+            alert('الرجاء إكمال جميع الحقول المطلوبة');
+            return;
+        }
+
+        // Get base values
+        const finishingPrice = priceEstimates.finishing[formData.finishing] || 0;
+        const designMultiplier = priceEstimates.design[formData.design] || 1;
+        const shapeMultiplier = priceEstimates.shape[formData.shape] || 1;
+        const cityMultiplier = priceEstimates.city[formData.city] || 1;
+        const area = parseFloat(formData.landArea) || 0;
+
+        // Calculate base estimate
+        let estimate = finishingPrice * area * designMultiplier * shapeMultiplier * cityMultiplier;
+
+        // Add room costs
+        if (formData.bedrooms) {
+            estimate += formData.bedrooms * priceEstimates.rooms.bedrooms;
+        }
+        if (formData.bathrooms) {
+            estimate += formData.bathrooms * priceEstimates.rooms.bathrooms;
+        }
+        if (formData.livingRooms) {
+            estimate += formData.livingRooms * priceEstimates.rooms.living_rooms;
+        }
+        if (formData.kitchens) {
+            estimate += formData.kitchens * priceEstimates.rooms.kitchens;
+        }
+        if (formData.annexes) {
+            estimate += formData.annexes * priceEstimates.rooms.annexes;
+        }
+
+        // Apply floor multiplier
+        if (formData.floors && formData.floors > 1) {
+            estimate *= (1 + (formData.floors * 0.05));
+        }
+
+        // Add parking cost
+        if (formData.parking) {
+            estimate += formData.parking * 25000;
+        }
+
+        // Round to nearest 1000
+        estimate = Math.round(estimate / 1000) * 1000;
+
+        // Display result
+        estimateValue.textContent = estimate.toLocaleString('ar-SA');
+        totalEstimate.style.display = 'block';
+
+        // Save estimate to formData and hidden input
+        formData.estimate = estimate;
+        syncHiddenInputs();
+
+        // Show submit button
+        document.getElementById('submitBtn').style.display = 'inline-block';
+
+        // Scroll to result
+        totalEstimate.scrollIntoView({
+            behavior: 'smooth'
+        });
+
+        // Show detailed breakdown
+        showEstimateBreakdown(estimate, finishingPrice, area, designMultiplier, shapeMultiplier, cityMultiplier);
+
+        // ✅ منع تكرار الحساب
+        isEstimateCalculated = true;
+    }
+
+    // ✅ إعادة التفعيل لو المستخدم غيّر حاجة
+    document.addEventListener('DOMContentLoaded', function () {
+        document.querySelectorAll('input, select').forEach(el => {
+            el.addEventListener('input', () => {
+                isEstimateCalculated = false;
+                document.getElementById('total-estimate').style.display = 'none';
+                document.getElementById('submitBtn').style.display = 'none';
+            });
+        });
+    });
         function showEstimateBreakdown(total, finishingPrice, area, designMultiplier, shapeMultiplier, cityMultiplier) {
             const breakdown = document.createElement('div');
             breakdown.className = 'estimate-breakdown';

@@ -54,6 +54,20 @@ class User extends Authenticatable
     {
         return $this->hasOne(ConsultantProfile::class);
     }
+    public function deliveries()
+{
+    return $this->hasMany(Delivery::class, 'consultant_id');
+}
+public function contractorProjects()
+{
+    return $this->belongsToMany(Project::class, 'project_contractor')
+                ->withPivot(['price', 'timeline', 'details', 'status']);
+}
+
+public function consultantProposals()
+{
+    return $this->hasMany(Proposal::class, 'consultant_id');
+}
 
     /**
      * Get the contractor profile associated with the user.
@@ -87,5 +101,10 @@ class User extends Authenticatable
         }
         // يمكنك إضافة شروط أخرى هنا (مثلاً: تحقق من الحظر أو الصلاحيات)
         return true;
+    }
+    // في app/Models/User.php
+    public function contractorOffers()
+    {
+        return $this->hasMany(ContractorOffer::class, 'contractor_id');
     }
 }

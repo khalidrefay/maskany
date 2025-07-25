@@ -53,4 +53,23 @@ class ProjectItemsController extends Controller
         $estimates = ProjectItems::where('user_id', Auth::id())->latest()->paginate(10);
         return view('estimate-projects.show', compact('estimates'));
     }
+    public function destroy($id)
+{
+    $project = ProjectItems::findOrFail($id);
+
+    // تحقق إن المستخدم هو صاحب المشروع
+    if (auth()->id() !== $project->user_id) {
+        abort(403, 'غير مصرح لك بحذف هذا المشروع');
+    }
+
+    $project->delete();
+
+    return redirect()->route('projects.index')->with('success', 'تم حذف المشروع بنجاح.');
+}
+public function showSingleProject($id)
+{
+    $project = ProjectItems::with('user')->findOrFail($id);
+    return view('consultant.projects.show', compact('project'));
+}
+
 }

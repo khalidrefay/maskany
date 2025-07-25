@@ -78,4 +78,10 @@ class SupplierController extends Controller
 
         return back()->with('success', 'تم إرسال عرضك للمواد بنجاح!');
     }
+
+    public function availableProjects()
+{
+    $projects = Project::where('status', 'contractor_accepted')->paginate(10);
+    return view('merchant.projects', compact('projects'));
+}
 }

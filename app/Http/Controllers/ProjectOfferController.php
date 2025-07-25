@@ -10,23 +10,30 @@ use Illuminate\Support\Facades\Auth;
 class ProjectOfferController extends Controller
 {
     public function store(Request $request)
-    {
-        $validated = $request->validate([
-            'project_id' => 'required|exists:project_items,id',
-            'amount'     => 'required|numeric|min:1',
-            'note'       => 'nullable|string|max:1000',
-        ]);
+{
+    $validated = $request->validate([
+        'project_id' => 'required|exists:project_items,id',
+        'amount'     => 'required|numeric|min:1',
+        'note'       => 'nullable|string|max:1000',
+    ]);
 
-        ProjectOffer::create([
-            'project_id' => $validated['project_id'],
-            'user_id'    => Auth::id(),
-            'amount'     => $validated['amount'],
-            'note'       => $validated['note'] ?? null,
-            'status'     => 'pending',
-        ]);
+    $offer = ProjectOffer::create([
+        'project_id' => $validated['project_id'],
+        'user_id'    => Auth::id(),
+        'amount'     => $validated['amount'],
+        'note'       => $validated['note'] ?? null,
+        'status'     => 'pending',
+    ]);
 
-        return back()->with('success', 'تم إرسال العرض بنجاح!');
-    }
+    // إرسال إشعار لصاحب المشروع
+    $project = ProjectItems::with('user')->find($validated['project_id']);
+    $project->user->notify(new \App\Notifications\SupplierSubmittedOffer($offer));
+
+    return redirect()
+    ->route('consultant.projects.show', $request->project_id)
+    ->with('success', 'تم تقديم العرض بنجاح');
+}
+
 
     /**
      * List all offers for a specific project (for project owner).
@@ -65,8 +72,7 @@ class ProjectOfferController extends Controller
             ->where('id', '!=', $offer->id)
             ->update(['status' => 'rejected']);
 
-        return back()->with('success', 'تم قبول العرض بنجاح!');
-    }
+        return view('project_offers.index', compact('project'));    }
 
     /**
      * Reject an offer (optional).

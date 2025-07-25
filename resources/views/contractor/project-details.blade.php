@@ -41,6 +41,38 @@
             @endif
         </div>
     </div>
+    @if ($acceptedProposal && $acceptedProposal->final_delivery_files)
+    <div class="card mb-4">
+        <div class="card-header">ملفات التسليم النهائي من الاستشاري</div>
+        <div class="card-body">
+            <ul>
+                @foreach (json_decode($acceptedProposal->final_delivery_files, true) as $file)
+                    <li><a href="{{ asset('storage/' . $file) }}" target="_blank">تحميل {{ basename($file) }}</a></li>
+                @endforeach
+            </ul>
+        </div>
+    </div>
+@endif
+@if ($acceptedProposal && $acceptedProposal->final_delivery_files)
+    <div class="card mb-4">
+        <div class="card-header">تقديم عرضك</div>
+        <div class="card-body">
+            <form method="POST" action="{{ route('contractor.offer.submit', $project->id) }}">
+                @csrf
+                <div class="mb-3">
+                    <label for="amount" class="form-label">قيمة العرض (جنيه)</label>
+                    <input type="number" name="amount" id="amount" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="note" class="form-label">ملاحظات (اختياري)</label>
+                    <textarea name="note" id="note" class="form-control" rows="4"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">إرسال العرض</button>
+            </form>
+        </div>
+    </div>
+@endif
+
     <a href="{{ route('contractor.projects') }}" class="btn btn-secondary">رجوع إلى قائمة المشاريع</a>
 </div>
 @endsection

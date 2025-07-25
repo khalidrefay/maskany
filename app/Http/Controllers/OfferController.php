@@ -1,5 +1,5 @@
 <?php
-
+//OfferController
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -33,17 +33,47 @@ class OfferController extends Controller
     /**
      * Accept an offer.
      */
-    public function accept($id)
-    {
-        $offer = Offer::findOrFail($id);
-        $offer->status = 'accepted';
-        $offer->save();
+/**
+ * قبول العرض (تعمل مع كل أنواع العروض)
+ */
+public function accept($id)
+{
+    $offer = Offer::with(['project.user', 'proposal.project'])->findOrFail($id);
+    
+    $this->authorize('accept', $offer);
 
-        // Optionally, notify the user or update related models
-
-        return back()->with('success', 'تم قبول العرض بنجاح!');
+    // التحقق من الصلاحيات
+    if ($offer->project && auth()->id() !== $offer->project->user_id) {
+        return response()->json(['message' => 'غير مصرح'], 403);
     }
 
+    if ($offer->proposal && auth()->id() !== $offer->proposal->project->user_id) {
+        return response()->json(['message' => 'غير مصرح'], 403);
+    }
+
+    DB::transaction(function () use ($offer) {
+        $offer->update(['status' => 'accepted']);
+        
+        // إذا كان عرض مقاول
+        if ($offer instanceof ContractorOffer) {
+            $offer->proposal->project->update(['status' => 'contractor_accepted']);
+            
+            MerchantNotification::create([
+                'project_id' => $offer->proposal->project_id,
+                'message' => 'مشروع جاهز لتلقي عروض التجار'
+            ]);
+        }
+        
+        // إذا كان عرض استشاري
+        if ($offer instanceof Proposal) {
+            $offer->project->update(['status' => 'consultant_accepted']);
+        }
+    });
+
+    return request()->wantsJson()
+        ? response()->json(['message' => 'تم قبول العرض بنجاح', 'status' => 'success'])
+        : back()->with('success', 'تم قبول العرض بنجاح');
+}
     /**
      * Reject an offer.
      */
@@ -71,4 +101,5 @@ class OfferController extends Controller
 
         return view('land-exchange', compact('useroffers'));
     }
+    
 }

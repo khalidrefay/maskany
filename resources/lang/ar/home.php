@@ -12,6 +12,14 @@ return [
         'vision' => 'رؤية شاملة لتقدير تكلفة مشروعك مع منصة إنشاء',
         'start' => 'ابدأ الآن'
     ],
+     'header' => [
+        'inspired_designs' => 'تصاميم ملهمة',
+        'estimated_home_cost' => 'تكلفة البناء التقديرية',
+        'land_purchase_initiative' => 'مبادرة شراء الأرض',
+        'my_projects' => 'مشاريعي',
+        'register'=>'تسجيل حساب جديد',
+
+    ],
 
     'build_steps' => [
         'title' => 'ابنِ مشروعك خطوة بخطوة',

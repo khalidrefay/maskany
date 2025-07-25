@@ -35,7 +35,7 @@ return new class extends Migration
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->string('location')->nullable();
             $table->decimal('budget', 12, 2)->nullable();
-            $table->enum('status', ['open', 'in_progress', 'completed', 'cancelled'])->default('open');
+            $table->enum('status', ['open', 'in_progress', 'completed', 'cancelled', 'awaiting_contractor_offers', ])->default('open');
             $table->timestamps();
         });
     }

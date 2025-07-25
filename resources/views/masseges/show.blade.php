@@ -12,6 +12,7 @@
                     {{ $message->created_at->format('M j, Y h:i A') }}
                 </span>
             </div>
+            
             <div class="mt-2 text-sm text-gray-700 whitespace-pre-wrap">
                 {!! nl2br(e($message->content)) !!}
             </div>
@@ -29,3 +30,21 @@
         </div>
     </div>
 </div>
+
+@if(request('active_tab') == 'offers' || session('show_offers'))
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // افتح تبويب العروض تلقائياً
+            const offersTab = document.querySelector('a[href="#step-1"]');
+            if (offersTab) {
+                offersTab.click();
+            }
+            
+            // قم بالتمرير إلى قسم العروض
+            const offersSection = document.getElementById('step-1');
+            if (offersSection) {
+                offersSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+@endif

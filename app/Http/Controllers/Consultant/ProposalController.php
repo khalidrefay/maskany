@@ -1,5 +1,5 @@
 <?php
-
+//ProposalController
 namespace App\Http\Controllers\Consultant;
 
 use App\Http\Controllers\Controller;
@@ -56,9 +56,8 @@ class ProposalController extends Controller
         // إشعار مالك المشروع عند رفع ملفات من الاستشاري
         $proposal->project->user->notify(new ConsultantFilesUploaded($proposal));
 
-        return redirect()
-            ->route('consultant.projects.show', $request->project_id)
-            ->with('success', 'تم تقديم العرض بنجاح');
+        return redirect()->to('/consultant/my-offers-view')->with('success', 'تم تقديم العرض بنجاح');
+
     }
 
     public function edit($proposalId)
@@ -123,38 +122,36 @@ class ProposalController extends Controller
     /**
      * قبول عرض الاستشاري من قبل مالك المشروع
      */
-    public function accept($proposalId)
-    {
-        $proposal = ProjectProposal::findOrFail($proposalId);
-        $project = $proposal->project;
+public function accept($proposalId)
+{
+    $proposal = ProjectProposal::findOrFail($proposalId);
+    $project = $proposal->project;
 
-        // تحقق أن المستخدم الحالي هو مالك المشروع
-        if (auth()->id() !== $project->user_id) {
-            abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء');
-        }
-
-        // قبول العرض
-        $proposal->status = 'accepted';
-        $proposal->save();
-
-        // رفض باقي العروض لنفس المشروع
-        ProjectProposal::where('project_id', $proposal->project_id)
-            ->where('id', '!=', $proposal->id)
-            ->update(['status' => 'rejected']);
-
-        // تحديث المقاول في المشروع (جدول projects)
-        $mainProject = \App\Models\Project::where('id', $proposal->project_id)->first();
-        if ($mainProject) {
-            $mainProject->contractor_id = $proposal->consultant_id;
-            $mainProject->save();
-        }
-
-        // يمكنك هنا إرسال إشعار للمقاول أو تنفيذ منطق إضافي
-        // مثال: إشعار بسيط (يمكنك تخصيصه)
-        // $proposal->consultant->notify(new \App\Notifications\ProposalAccepted($proposal));
-
-        return redirect()->back()->with('success', 'تم قبول عرض الاستشاري بنجاح وتم ربط الملفات بالمقاول.');
+    // تحقق أن المستخدم الحالي هو مالك المشروع
+    if (auth()->id() !== $project->user_id) {
+        abort(403, 'غير مصرح لك بتنفيذ هذا الإجراء');
     }
+
+    // قبول العرض
+    $proposal->status = 'accepted';
+    $proposal->save();
+
+    // رفض باقي العروض
+    ProjectProposal::where('project_id', $proposal->project_id)
+        ->where('id', '!=', $proposal->id)
+        ->update(['status' => 'rejected']);
+
+    // $mainProject->contractor_id = $proposal->consultant_id;
+
+    // ✅ ممكن بس نحدث حالة المشروع مثلاً لو عايز تتابع
+    $project->update(['status' => 'awaiting_contractor_offers']); // اختياري
+
+    return response()->json([
+        'status' => 'accepted',
+        'message' => 'تم قبول عرض الاستشاري بنجاح.'
+    ]);
+}
+
 
     /**
      * عرض عروض الموردين على مشروع معيّن بعد موافقة الاستشاري
@@ -205,4 +202,8 @@ class ProposalController extends Controller
         $offer->user->notify(new SupplierOfferStatus($offer, 'rejected'));
         return back()->with('success', 'تم رفض عرض المورد.');
     }
+    public function consultant()
+{
+    return $this->belongsTo(User::class, 'consultant_id');
+}
 }

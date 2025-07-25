@@ -2,11 +2,32 @@
 
 return [
     // General
-    'header' => [
+   'header' => [
+        'login' => 'تسجيل الدخول',
+        'register'=>'تسجيل حساب جديد',
+        'arabic' => 'العربية',
+        'english' => 'الإنجليزية',
+        'home' => 'الرئيسية',
+        'inspired_designs' => 'تصاميم ملهمة',
+        'estimated_home_cost' => 'تكلفة البناء التقديرية',
+        'land_purchase_initiative' => 'مبادرة شراء الأرض',
+        'my_projects' => 'مشاريعي',
+        'estimated_home_cost' => '',
+        'calculate' => 'احسبها بشكل صحيح',
+        'notifications' => 'الإشعارات',
+        'no_notifications' => 'لا يوجد إشعارات حالياً',
+        'view_all_notifications' => 'عرض كل الإشعارات',
+        'messages' => 'الرسائل',
+        'view_all_messages' => 'عرض كل الرسائل',
+        'no_messages' => 'لا توجد رسائل بعد',
+        'support' => 'الدعم',
+        'opinions' => 'الآراء',
+        'about' => 'عن إنشاءت',
+        'logo_alt' => 'شعار إنشاءت',
         'messages' => 'الرسائل',
         'loading_messages' => 'جاري تحميل الرسائل...',
-        'no_messages' => 'لا توجد رسائل',
-    ],
+        'no_messages' => 'لا توجد رسائل بعد'
+   ],
     'messages' => [
         'type_message_here' => 'اكتب رسالتك هنا...',
         'message_sent_successfully' => 'تم إرسال الرسالة بنجاح!',

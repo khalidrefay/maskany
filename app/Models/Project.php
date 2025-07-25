@@ -22,6 +22,10 @@ class Project extends Model
     {
         return $this->belongsTo(User::class);
     }
+    public function deliveries()
+{
+    return $this->hasMany(Delivery::class);
+}
 
     public function stages()
     {
@@ -30,13 +34,15 @@ class Project extends Model
 
     public function proposals()
     {
-        return $this->hasMany(ProjectProposal::class);
+        return $this->hasMany(\App\Models\ProjectProposal::class);
     }
 
     public function items()
     {
         return $this->hasMany(\App\Models\ProjectItems::class, 'project_id');
     }
+
+
 
     public function getStatusTextAttribute()
     {
@@ -47,4 +53,31 @@ class Project extends Model
             default => 'غير معروف'
         };
     }
+    public function acceptedProposal()
+{
+    return $this->hasOne(ProjectProposal::class)->where('status', 'accepted');
+}
+
+
+public function contractors()
+{
+    return $this->belongsToMany(User::class, 'project_contractor')
+                ->withPivot(['price', 'timeline', 'details', 'status'])
+                ->withTimestamps();
+}
+public function contractorOffers()
+    {
+        return $this->hasMany(ContractorOffer::class, 'project_id')
+                    ->whereNotNull('contractor_id')
+                    ->with('contractor');
+    }
+
+    // في app/Models/Project.php
+public function offers()
+{
+    return $this->hasMany(ContractorOffer::class);
+}
+
+
+
 }

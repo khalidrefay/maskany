@@ -13,10 +13,13 @@ class ConsultantFilesUploaded extends Notification implements ShouldQueue
     use Queueable;
 
     protected $proposal;
+    protected $offer;
+
 
     public function __construct(ProjectProposal $proposal)
     {
         $this->proposal = $proposal;
+
     }
 
     public function via($notifiable)
@@ -32,6 +35,7 @@ class ConsultantFilesUploaded extends Notification implements ShouldQueue
             ->line('قام الاستشاري ' . $this->proposal->consultant->name . ' برفع ملفات جديدة على مشروعك: ' . $this->proposal->project->title)
             ->action('عرض الملفات', url('/projects/' . $this->proposal->project_id))
             ->line('يرجى مراجعة الملفات المرفوعة.');
+            
     }
 
     public function toArray($notifiable)
@@ -44,4 +48,9 @@ class ConsultantFilesUploaded extends Notification implements ShouldQueue
             'project_title' => $this->proposal->project->title,
         ];
     }
+ 
+
+
+
+   
 }

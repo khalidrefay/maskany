@@ -61,11 +61,45 @@ class ProjectItemsController extends Controller
 
         ProjectItems::create($validated);
 
-        return redirect()->back()->with('success', 'تم حفظ تقدير المشروع بنجاح!');
+      return redirect()->back()->with('success', 'تم حذف المشروع بنجاح.');
     }
-    public function show($id)
-    {
-        $estimates = ProjectItems::where('user_id',$id)->latest()->paginate(10);
-        return view('', compact('estimates'));
+public function show($id)
+{
+    $project = ProjectItems::with(['user', 'proposals.consultant'])->findOrFail($id);
+    return view('consultant.projects.show', compact('project'));
+}
+
+public function multiProject()
+{
+    // تحميل العلاقات مع فلترة حسب دور المستخدم
+    $query = Project::with([
+        'proposals.consultant',
+        'contractorOffers.contractor',
+        'contractors'
+    ]);
+
+    // إذا كان المستخدم مقاولاً، نحمّل فقط المشاريع المرتبطة به
+    if (auth()->check() && auth()->user()->role == 'contractor') {
+        $query->where(function($q) {
+            $q->whereHas('contractorOffers', function($sub) {
+                $sub->where('contractor_id', auth()->id());
+            })->orWhereHas('contractors', function($sub) {
+                $sub->where('user_id', auth()->id());
+            });
+        });
     }
+
+    $projects = $query->get();
+
+    return view('project.multi-project', compact('projects'));
+}
+public function acceptContractorOffer(Request $request, Project $project, User $contractor)
+{
+    if (auth()->id() == $project->user_id) {
+        $project->contractors()->updateExistingPivot($contractor->id, ['status' => 'accepted']);
+        return redirect()->back()->with('success', 'تم قبول عرض المقاول بنجاح');
+    }
+    abort(403, 'غير مصرح لك بهذا الإجراء');
+}
+    
 }

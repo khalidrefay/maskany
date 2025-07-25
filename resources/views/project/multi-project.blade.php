@@ -1,3 +1,4 @@
+
 @extends('layouts.app')
 
 @section('css')
@@ -87,9 +88,13 @@
 @section('content')
 <body class="bg-gray-50" dir="{{ app()->isLocale('ar') ? 'rtl' : 'ltr' }}">
     <div class="container mx-auto px-4 py-8">
+        
+        
+        
         <!-- Project Management Container -->
         <div class="bg-white rounded-lg shadow-md p-6">
             <h1 class="text-2xl font-bold text-gray-800 mb-8">{{ __('projects.my_projects') }}</h1>
+            
 
             <!-- Navigation Tabs -->
             <div class="flex flex-col md:flex-row gap-4 md:gap-8 mb-8 border-b border-gray-200">
@@ -127,70 +132,91 @@
                         {{ session('error') }}
                     </div>
                 @endif
+                
 
-                <!-- Step 0: Overview -->
-                <div id="step-0" class="step-panel">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-8">
-                        @forelse($projects as $projectItem)
-                            <div class="bg-white rounded-xl shadow-lg p-5 flex flex-col justify-between">
-                                <div>
-                                    <div class="flex items-center mb-4">
-                                        <img src="{{ $projectItem->user->avatar ?? 'https://randomuser.me/api/portraits/men/32.jpg' }}"
-                                            alt="{{ __('projects.user_avatar') }}"
-                                            class="w-12 h-12 rounded-full object-cover border-2 border-white shadow">
-                                        <div class="mr-3">
-                                            <p class="font-bold text-gray-800 text-sm">
-                                                {{ $projectItem->user->name ?? __('projects.default_user') }}</p>
-                                            <p class="text-xs text-gray-500">{{ __('projects.project_owner') }}</p>
-                                        </div>
-                                    </div>
-                                    <h3 class="text-lg font-semibold text-blue-700 mb-2">
-                                        {{ $projectItem->title ?? __('projects.untitled_project') }}</h3>
+<!-- Step 0: Overview -->
+<div id="step-0" class="step-panel">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 my-8">
+        @forelse($projects as $projectItem)
+            @if(auth()->user()->role != 'contractor' || 
+               ($projectItem->proposals->where('status', 'accepted')->count()))
+                <div class="bg-white rounded-xl shadow-lg p-5 flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center mb-4">
+                            <img src="{{ $projectItem->user->avatar ?? 'https://randomuser.me/api/portraits/men/32.jpg' }}"
+                                alt="{{ __('projects.user_avatar') }}"
+                                class="w-12 h-12 rounded-full object-cover border-2 border-white shadow">
+                            <div class="mr-3">
+                                <p class="font-bold text-gray-800 text-sm">
+                                    {{ $projectItem->user->name ?? __('projects.default_user') }}</p>
+                                <p class="text-xs text-gray-500">{{ __('projects.project_owner') }}</p>
+                            </div>
+                        </div>
+                        <h3 class="text-lg font-semibold text-blue-700 mb-2">
+                            {{ $projectItem->title ?? __('projects.untitled_project') }}</h3>
 
-                                    <!-- Project Details -->
-                                    <div class="mb-2"><span class="font-semibold text-gray-700">{{ __('projects.city') }}:</span>
-                                        <span class="text-gray-900">{{ $projectItem->city ?? '-' }}</span>
-                                    </div>
-                                    <div class="mb-2"><span class="font-semibold text-gray-700">{{ __('projects.district') }}:</span>
-                                        <span class="text-gray-900">{{ $projectItem->district ?? '-' }}</span>
-                                    </div>
-                                    <div class="mb-2"><span class="font-semibold text-gray-700">{{ __('projects.land_area') }}:</span>
-                                        <span class="text-gray-900">{{ $projectItem->land_area ?? '-' }} m²</span>
-                                    </div>
-                                    <div class="mb-2"><span class="font-semibold text-gray-700">{{ __('projects.design') }}:</span>
-                                        <span class="text-gray-900">{{ $projectItem->design ?? '-' }}</span>
-                                    </div>
-                                    <div class="mb-2"><span class="font-semibold text-gray-700">{{ __('projects.finishing') }}:</span>
-                                        <span class="text-gray-900">{{ $projectItem->finishing ?? '-' }}</span>
-                                    </div>
-                                    <div class="mb-2"><span class="font-semibold text-gray-700">{{ __('projects.floors') }}:</span>
-                                        <span class="text-gray-900">{{ $projectItem->floors ?? '-' }}</span>
-                                    </div>
-                                    <div class="mb-2"><span class="font-semibold text-gray-700">{{ __('projects.estimated_cost') }}:</span>
-                                        <span class="text-blue-700 font-bold">{{ number_format($projectItem->estimate) }}
-                                            {{ __('projects.currency') }}</span>
-                                    </div>
-                                </div>
-                                <div class="flex justify-between items-center mt-4">
-                                    <span class="text-sm text-gray-600">{{ __('projects.offers_count') }}: {{ $projectItem->offers_count }}</span>
-                                    @if(auth()->user()->role == 'consultant' && !$projectItem->proposals->where('consultant_id', auth()->id())->count())
-                                    <button class="bg-blue-600 text-white text-sm font-medium rounded-lg px-4 py-2 hover:bg-blue-700 transition duration-200 open-offer-modal-btn"
-                                        data-project-id="{{ $projectItem->id }}">
-                                        {{ __('projects.submit_offer') }}
-                                    </button>
-                                    @endif
-                                    <span class="text-xs text-gray-400">{{ $projectItem->created_at->format('Y-m-d') }}</span>
-                                </div>
-                            </div>
-                        @empty
-                            <div class="col-span-3 text-center text-gray-500 py-8">
-                                {{ __('projects.no_projects') }}
-                            </div>
-                        @endforelse
+                        <!-- Project Details -->
+                        <div class="mb-2"><span class="font-semibold text-gray-700">{{ __('projects.city') }}:</span>
+                            <span class="text-gray-900">{{ $projectItem->city ?? '-' }}</span>
+                        </div>
+                        <div class="mb-2"><span class="font-semibold text-gray-700">{{ __('projects.district') }}:</span>
+                            <span class="text-gray-900">{{ $projectItem->district ?? '-' }}</span>
+                        </div>
+                        <div class="mb-2"><span class="font-semibold text-gray-700">{{ __('projects.land_area') }}:</span>
+                            <span class="text-gray-900">{{ $projectItem->land_area ?? '-' }} m²</span>
+                        </div>
+                        <div class="mb-2"><span class="font-semibold text-gray-700">{{ __('projects.design') }}:</span>
+                            <span class="text-gray-900">{{ $projectItem->design ?? '-' }}</span>
+                        </div>
+                        <div class="mb-2"><span class="font-semibold text-gray-700">{{ __('projects.finishing') }}:</span>
+                            <span class="text-gray-900">{{ $projectItem->finishing ?? '-' }}</span>
+                        </div>
+                        <div class="mb-2"><span class="font-semibold text-gray-700">{{ __('projects.floors') }}:</span>
+                            <span class="text-gray-900">{{ $projectItem->floors ?? '-' }}</span>
+                        </div>
+                        <div class="mb-2"><span class="font-semibold text-gray-700">{{ __('projects.estimated_cost') }}:</span>
+                            <span class="text-blue-700 font-bold">{{ number_format($projectItem->estimate) }}
+                                {{ __('projects.currency') }}</span>
+                        </div>
                     </div>
+                    
+                    @if(auth()->id() === $projectItem->user_id)
+                        {{-- زر حذف المشروع --}}
+                        <form action="{{ route('projects.destroy', $projectItem->id) }}" method="POST" onsubmit="return confirm('هل أنت متأكد أنك تريد حذف هذا المشروع؟')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit"
+                                    class="bg-red-600 text-white text-sm font-medium rounded-lg px-4 py-2 hover:bg-red-700 transition duration-200">
+                                حذف المشروع
+                            </button>
+                        </form>
+                  @elseif(auth()->user()->role == 'consultant' && !$projectItem->proposals->where('consultant_id', auth()->id())->count())
+    {{-- Consultant submit proposal button --}}
+    <button class="bg-blue-600 text-white text-sm font-medium rounded-lg px-4 py-2 hover:bg-blue-700 transition duration-200 open-offer-modal-btn"
+        data-project-id="{{ $projectItem->id }}">
+        {{ __('projects.submit_offer') }}
+    </button>
+    
+@elseif(auth()->user()->role == 'contractor' && $projectItem->proposals->where('status', 'accepted')->count())
+    @php
+        // جلب الـ Proposal الـ Accepted الأول
+        $acceptedProposal = $projectItem->proposals->where('status', 'accepted')->first();
+    @endphp
+    @if($acceptedProposal)
+        <a href="{{ route('contractor.project.proposal.consultant-proposal', $acceptedProposal->id) }}" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700 transition">
+            عرض بيانات الاستشاري
+        </a>
+    @endif
+@endif
                 </div>
-
-                <!-- Offer Modal -->
+            @endif
+        @empty
+            <div class="col-span-3 text-center text-gray-500 py-8">
+                {{ __('projects.no_projects') }}
+            </div>
+        @endforelse
+    </div>
+</div>            <!-- Offer Modal -->
                 <div id="submit-offer-modal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
                     <div class="bg-white rounded-lg shadow-xl w-full max-w-md mx-4">
                         <form method="POST" action="{{ route('project-offers.store') }}" id="offerForm">
@@ -224,78 +250,186 @@
                     </div>
                 </div>
 
-                <!-- Step 1: Offers -->
-                <div id="step-1" class="step-panel hidden">
-                    <div class="space-y-6">
-                        @foreach($projects as $projectItem)
-                            @if(auth()->id() == $projectItem->user_id)
-                            @foreach($projectItem->proposals as $proposal)
-                                    <div class="flex flex-row-reverse gap-4 items-stretch bg-white shadow-lg rounded-xl mb-4 p-4 border">
-                                        <!-- بيانات الاستشاري -->
-                                        <div class="flex flex-col items-center justify-center min-w-[180px] border-l pl-4">
-                                            <img src="{{ $proposal->consultant->image ? asset('storage/' . $proposal->consultant->image) : 'https://randomuser.me/api/portraits/men/32.jpg' }}" alt="صورة الاستشاري" class="w-14 h-14 rounded-full object-cover mb-2">
-                                            <div class="font-bold text-base mb-1">{{ $proposal->consultant->first_name }} {{ $proposal->consultant->last_name }}</div>
-                                            <div class="text-xs text-gray-500 mb-1">الحمد للاستشارات الهندسية</div>
-                                            <div class="text-xs text-gray-400 mb-1">رقم الترخيص: 8797415</div>
-                                            <div class="flex items-center mt-1">
-                                                <span class="text-yellow-400 mr-1">
-                                                    @for($i = 0; $i < 5; $i++)
-                                                        <i class="fas fa-star"></i>
-                                                    @endfor
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <!-- بطاقات الملفات -->
-                                        <div class="flex flex-1 gap-3 flex-wrap items-center justify-center">
-                                            @php
-                                                $files = [
-                                                    ['label' => 'مخطط البناء', 'file' => $proposal->design_plans[0] ?? null, 'size' => '500 KB'],
-                                                    ['label' => 'العرض الفني', 'file' => $proposal->design_plans[1] ?? null, 'size' => '300 KB'],
-                                                    ['label' => 'الكلفة التقديرية للمشروع', 'file' => $proposal->materials_list ?? null, 'size' => '200 KB'],
-                                                ];
-                                            @endphp
-                                            @foreach($files as $f)
-                                                <div class="border rounded-lg p-3 text-center min-w-[160px] bg-white shadow-sm flex flex-col items-center">
-                                                    <div class="font-bold mb-1">{{ $f['label'] }}</div>
-                                                    <div class="text-xs text-gray-500 mb-2">{{ $f['size'] }}</div>
-                                                    @if($f['file'] && (auth()->id() == $projectItem->user_id || (auth()->user()->role == 'contractor' && $projectItem->contractor_id == auth()->id() && $proposal->status == 'accepted')))
-                                                        <a href="{{ asset('storage/' . $f['file']) }}" class="text-blue-600 flex items-center gap-1 border border-blue-100 rounded px-3 py-1 hover:bg-blue-50 transition" download>
-                                                            <i class="fas fa-download"></i> تنزيل
-                                                        </a>
-                                                    @else
-                                                        <span class="text-gray-400">غير متاح</span>
-                                            @endif
-                                                </div>
-                                            @endforeach
-                                        </div>
-                                        <!-- أزرار القبول والتواصل -->
-                                        <div class="flex flex-col gap-2 min-w-[140px] items-center justify-center border-r pr-4">
-                                            <button class="bg-green-500 text-white rounded px-4 py-2 font-bold hover:bg-green-600 transition mb-2">قبول العرض</button>
-                                            <a href="mailto:{{ $proposal->consultant->email }}" class="bg-white border border-green-200 text-green-700 rounded px-4 py-2 font-bold text-center hover:bg-green-50 transition">تواصل مع الاستشاري</a>
-                                        </div>
-                                    </div>
-                                @endforeach
-                            @endif
-                            @endforeach
-                    </div>
-                </div>
-
-                <!-- Step 2: Documents -->
-                <div id="step-2" class="step-panel hidden">
-                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 max-w-6xl mx-auto">
-                        <!-- Contract 1 -->
-                        <div class="flex items-center bg-gray-50 shadow p-4 gap-3 file-card transition duration-200">
-                            <i class="fas fa-file-pdf text-red-500 text-2xl"></i>
-                            <div class="flex-grow">
-                                <p class="font-bold text-gray-800 text-sm">{{ __('projects.initial_agreement') }}</p>
-                                <p class="text-xs text-gray-500 text-sm">250 KB</p>
+ <!-- Step 1: Offers - الجزء المصحح -->
+<div id="step-1" class="step-panel hidden">
+    <div class="space-y-6">
+        @foreach($projects as $projectItem)
+            @if(auth()->id() == $projectItem->user_id)
+                <!-- عروض الاستشاريين -->
+                @foreach($projectItem->proposals as $proposal)
+                    <div class="flex flex-row-reverse gap-4 items-stretch bg-white shadow-lg rounded-xl mb-4 p-4 border">
+                        <!-- بيانات الاستشاري (كما هو) -->
+                        <div class="flex flex-col items-center justify-center min-w-[180px] border-l pl-4">
+                            <img src="{{ $proposal->consultant->image ? asset('storage/' . $proposal->consultant->image) : 'https://randomuser.me/api/portraits/men/32.jpg' }}" 
+                                 alt="صورة الاستشاري" 
+                                 class="w-14 h-14 rounded-full object-cover mb-2">
+                            <div class="font-bold text-base mb-1">{{ $proposal->consultant->first_name }} {{ $proposal->consultant->last_name }}</div>
+                            <div class="text-xs text-gray-500 mb-1">الحمد للاستشارات الهندسية</div>
+                            <div class="text-xs text-gray-400 mb-1">رقم الترخيص: 8797415</div>
+                            <div class="flex items-center mt-1">
+                                <span class="text-yellow-400 mr-1">
+                                    @for($i = 0; $i < 5; $i++)
+                                        <i class="fas fa-star"></i>
+                                    @endfor
+                                </span>
                             </div>
-                            <button class="document-download flex items-center gap-2 shadow-sm bg-purple-100 text-blue-600 text-base font-semibold px-3 py-1 rounded-md">
-                                {{ __('projects.download') }}
-                                <i class="fas fa-download text-sm"></i>
-                            </button>
                         </div>
 
+                        <!-- بطاقات الملفات (كما هو) -->
+                        <div class="flex flex-1 gap-3 flex-wrap items-center justify-center">
+                            @php
+                                $files = [
+                                    ['label' => 'مخطط البناء', 'file' => $proposal->design_plans[0] ?? null, 'size' => '500 KB'],
+                                    ['label' => 'العرض الفني', 'file' => $proposal->design_plans[1] ?? null, 'size' => '300 KB'],
+                                    ['label' => 'الكلفة التقديرية للمشروع', 'file' => $proposal->materials_list ?? null, 'size' => '200 KB'],
+                                ];
+                            @endphp
+                            
+                            @foreach($files as $f)
+                                <div class="border rounded-lg p-3 text-center min-w-[160px] bg-white shadow-sm flex flex-col items-center">
+                                    <div class="font-bold mb-1">{{ $f['label'] }}</div>
+                                    <div class="text-xs text-gray-500 mb-2">{{ $f['size'] }}</div>
+                                    @if($f['file'] && (auth()->id() == $projectItem->user_id || (auth()->user()->role == 'contractor' && $projectItem->contractor_id == auth()->id() && $proposal->status == 'accepted')))
+                                        <a href="{{ asset('storage/' . $f['file']) }}" 
+                                           class="text-blue-600 flex items-center gap-1 border border-blue-100 rounded px-3 py-1 hover:bg-blue-50 transition" 
+                                           download>
+                                            <i class="fas fa-download"></i> تنزيل
+                                        </a>
+                                    @else
+                                        <span class="text-gray-400">غير متاح</span>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
+
+                        <!-- أزرار القبول والتواصل (كما هو) -->
+                        @auth
+                            @if (auth()->id() === $projectItem->user_id)
+                                @if ($proposal->status !== 'accepted')
+                                    <div id="accept-offer-wrapper-{{ $proposal->id }}">
+                                        <button type="button"
+                                            class="bg-green-500 text-white rounded px-4 py-2 font-bold hover:bg-green-600 transition mb-2"
+                                            onclick="acceptOffer({{ $proposal->id }})">
+                                            قبول العرض
+                                        </button>
+                                    </div>
+                                @else
+                                    <div class="bg-green-100 text-green-700 rounded px-4 py-2 font-bold mb-2 text-center">
+                                        تم القبول وسيتم التواصل معك
+                                    </div>
+                                @endif
+                            @endif
+                        @endauth
+
+                        <button
+                            onclick="alert('الإيميل: {{ $proposal->consultant->email }}\nرقم الهاتف: {{ $proposal->consultant->phone ?? 'غير متوفر' }}')"
+                            class="bg-white border border-green-200 text-green-700 rounded px-4 py-2 font-bold text-center hover:bg-green-50 transition"
+                        >
+                            تواصل مع الاستشاري
+                        </button>
+                    </div>
+                @endforeach
+
+                <!-- عروض المقاولين -->
+                <div class="mt-6">
+                    <h2 class="text-2xl font-semibold mb-4 text-gray-700">عروض المقاولين</h2>
+                    @if($projectItem->contractor_offers)
+                        @foreach($projectItem->contractor_offers as $offer)
+                            <div class="flex flex-row-reverse gap-4 items-stretch bg-white shadow-lg rounded-xl mb-4 p-4 border">
+                                <!-- بيانات المقاول -->
+                                <div class="flex flex-col items-center justify-center min-w-[180px] border-l pl-4">
+                                    <img src="{{ $offer->contractor->image ? asset('storage/' . $offer->contractor->image) : 'https://randomuser.me/api/portraits/men/32.jpg' }}" 
+                                         alt="صورة المقاول" 
+                                         class="w-14 h-14 rounded-full object-cover mb-2">
+                                    <div class="font-bold text-base mb-1">{{ $offer->contractor->first_name }} {{ $offer->contractor->last_name }}</div>
+                                    <div class="text-xs text-gray-500 mb-1">{{ $offer->contractor->company_name ?? 'شركة غير محددة' }}</div>
+                                    <div class="text-xs text-gray-400 mb-1">رقم الترخيص: {{ $offer->contractor->license_number ?? 'غير متوفر' }}</div>
+                                    <div class="flex items-center mt-1">
+                                        <span class="text-yellow-400 mr-1">
+                                            @for($i = 0; $i < 5; $i++)
+                                                <i class="fas fa-star"></i>
+                                            @endfor
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- بيانات العرض -->
+                                <div class="flex flex-1 gap-3 flex-wrap items-center justify-center">
+                                    <div class="border rounded-lg p-3 text-center min-w-[160px] bg-white shadow-sm flex flex-col items-center">
+                                        <div class="font-bold mb-1">السعر</div>
+                                        <div class="text-xs text-gray-500 mb-2">{{ __('projects.currency') }}</div>
+                                        <div>{{ $offer->price ?? 'غير محدد' }}</div>
+                                    </div>
+                                    <div class="border rounded-lg p-3 text-center min-w-[160px] bg-white shadow-sm flex flex-col items-center">
+                                        <div class="font-bold mb-1">المدة</div>
+                                        <div class="text-xs text-gray-500 mb-2">يوم</div>
+                                        <div>{{ $offer->timeline ?? 'غير محدد' }}</div>
+                                    </div>
+                                    @if($offer->pdf_file)
+                                        <div class="border rounded-lg p-3 text-center min-w-[160px] bg-white shadow-sm flex flex-col items-center">
+                                            <div class="font-bold mb-1">ملف PDF</div>
+                                            <div class="text-xs text-gray-500 mb-2">200 KB</div>
+                                            <a href="{{ asset('storage/' . $offer->pdf_file) }}" 
+                                               class="text-blue-600 flex items-center gap-1 border border-blue-100 rounded px-3 py-1 hover:bg-blue-50 transition" 
+                                               download>
+                                                <i class="fas fa-download"></i> تنزيل
+                                            </a>
+                                        </div>
+                                    @else
+                                        <div class="border rounded-lg p-3 text-center min-w-[160px] bg-white shadow-sm flex flex-col items-center">
+                                            <div class="font-bold mb-1">ملف PDF</div>
+                                            <div class="text-xs text-gray-500 mb-2">200 KB</div>
+                                            <span class="text-gray-400">غير متاح</span>
+                                        </div>
+                                    @endif
+                                </div>
+
+                                <!-- أزرار القبول والتواصل وحذف -->
+                                @auth
+                                    @if (auth()->id() === $projectItem->user_id)
+                                        @if ($offer->status !== 'accepted')
+                                            <div id="accept-offer-wrapper-{{ $offer->id }}">
+                                                <form action="{{ route('projects.acceptContractorOffer', ['project' => $projectItem->id, 'offer' => $offer->id]) }}" method="POST" class="mb-2">
+                                                    @csrf
+                                                    <button type="submit"
+                                                            class="bg-green-500 text-white rounded px-4 py-2 font-bold hover:bg-green-600 transition">
+                                                        قبول العرض
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        @else
+                                            <div class="bg-green-100 text-green-700 rounded px-4 py-2 font-bold mb-2 text-center">
+                                                تم القبول وسيتم التواصل معك
+                                            </div>
+                                        @endif
+                                    @endif
+                                    @if (auth()->id() === $offer->contractor_id)
+                                        <form action="{{ route('contractor.offers.destroy', ['project' => $projectItem->id, 'offer' => $offer->id]) }}" method="POST" class="mb-2">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit" class="bg-red-600 text-white rounded px-4 py-2 font-bold hover:bg-red-700 transition" onclick="return confirm('هل أنت متأكد من حذف العرض؟')">
+                                                حذف العرض
+                                            </button>
+                                        </form>
+                                    @endif
+                                @endauth
+
+                                <button 
+                                    onclick="alert('الإيميل: {{ $offer->contractor->email }}\nرقم الهاتف: {{ $offer->contractor->phone ?? 'غير متوفر' }}')"
+                                    class="bg-white border border-green-200 text-green-700 rounded px-4 py-2 font-bold text-center hover:bg-green-50 transition"
+                                >
+                                    تواصل مع المقاول
+                                </button>
+                            </div>
+                        @endforeach
+                    @else
+                        <p class="text-center text-gray-500">لا يوجد عروض مقاولين بعد.</p>
+                    @endif
+                </div>
+            @endif
+        @endforeach
+    </div>
+</div>
                         <!-- Contract 2 -->
                         <div class="flex items-center bg-gray-50 shadow p-4 gap-3 file-card transition duration-200">
                             <i class="fas fa-file-pdf text-red-500 text-2xl"></i>
@@ -529,4 +663,43 @@
         });
     });
 </script>
+<script>
+    function acceptOffer(proposalId) {
+        fetch("{{ url('user/proposals') }}/" + proposalId + "/accept", {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content,
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+        })
+        .then(async response => {
+            const contentType = response.headers.get("content-type");
+            if (!response.ok) {
+                const text = await response.text();
+                throw new Error(`خطأ: ${text}`);
+            }
+            if (contentType && contentType.includes("application/json")) {
+                return response.json();
+            } else {
+                const text = await response.text();
+                throw new Error("الاستجابة ليست بصيغة JSON: " + text);
+            }
+        })
+        .then(data => {
+            const wrapper = document.getElementById(`accept-offer-wrapper-${proposalId}`);
+            wrapper.innerHTML = `
+                <div class="bg-green-100 text-green-700 rounded px-4 py-2 font-bold mb-2 text-center">
+                    تم القبول وسيتم التواصل معك
+                </div>
+            `;
+        })
+        .catch(error => {
+            alert(error.message);
+            console.error(error);
+        });
+    }
+</script>
+
+
 @endsection

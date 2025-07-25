@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('messages', function (Blueprint $table) {
-            $table->timestamp('read_at')->nullable()->after('voice_note');
-        });
+        if (!Schema::hasColumn('messages', 'read_at')) {
+    $table->timestamp('read_at')->nullable()->after('voice_note');
+};
     }
 
     /**

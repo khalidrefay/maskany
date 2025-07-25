@@ -50,14 +50,20 @@ class ProjectItems extends Model
     ];
 
     public function user()
-    {
-        return $this->belongsTo(User::class);
-    }
+{
+    return $this->belongsTo(User::class);
+}
 
-    public function proposals()
-    {
-        return $this->hasMany(ProjectProposal::class, 'project_id');
-    }
+public function proposals()
+{
+    return $this->hasMany(ProjectProposal::class, 'project_id');
+}
+
+public function offers()
+{
+    return $this->hasMany(ProjectOffer::class, 'project_id');
+}
+
 
     public function getStatusTextAttribute()
     {
@@ -69,4 +75,6 @@ class ProjectItems extends Model
             default => 'غير معروف'
         };
     }
+
+    
 }

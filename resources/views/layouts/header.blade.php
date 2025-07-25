@@ -21,28 +21,28 @@
             <nav class="hidden md:flex space-x-6">
                 <a href="{{ route('inspired-designs') }}"
                     class="px-3 py-2 text-gray-600 hover:text-indigo-600 font-medium transition-colors duration-200 relative group">
-                    {{ __('home.header.Inspired Designs') }}
+                    {{ __('messages.header.inspired_designs') }}
                     <span
                         class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span>
                 </a>
 
                 <a href="{{ route('project.index') }}"
                     class="px-3 py-2 text-gray-600 hover:text-indigo-600 font-medium transition-colors duration-200 relative group">
-                    {{ __('home.header.Estimated home cost') }}
+                    {{ __('home.header.estimated_home_cost') }}
                     <span
                         class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span>
                 </a>
 
                 <a href="{{ route('land.exchange.index') }}"
                     class="px-3 py-2 text-gray-600 hover:text-indigo-600 font-medium transition-colors duration-200 relative group">
-                    {{ __('home.header.Land purchase initiative') }}
+                    {{ __('home.header.land_purchase_initiative') }}
                     <span
                         class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span>
                 </a>
 
                 <a href="{{ route('project.items.index') }}"
                     class="px-3 py-2 text-gray-600 hover:text-indigo-600 font-medium transition-colors duration-200 relative group">
-                    {{ __('home.header.My Projects') }}
+                    {{ __('home.header.my_projects') }}
                     <span
                         class="absolute bottom-0 left-0 w-0 h-0.5 bg-indigo-600 transition-all duration-300 group-hover:w-full"></span>
                 </a>
@@ -170,27 +170,23 @@
                                 <p class="text-sm text-gray-500 truncate">{{ auth()->user()->email ?? '' }}</p>
                             </div>
 
-                            <!-- Navigation Links -->
-                            <div class="py-1">
-                                <a href="{{ route(auth()->user()->role . '.dashboard') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2 text-gray-400"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                                    </svg>
-                                    {{ __('messages.dashboard.' . auth()->user()->role) }}
-                                </a>
-                                <a href="{{ route('profile.edit') }}"
-                                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
-                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2 text-gray-400"
-                                        fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                            d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                    </svg>
-                                    {{ __('messages.profile.title') }}
-                                </a>
-                            </div>
+                           <!-- Navigation Links -->
+<div class="py-1">
+    <a href="{{ route(auth()->user()->role . '.dashboard') }}"
+        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2" />
+        </svg>
+        {{ __('messages.dashboard.' . auth()->user()->role) }}
+    </a>
+    <a href="{{ route(auth()->user()->role . '.profile.edit') }}"
+        class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 transition-colors duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 inline mr-2 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+        {{ __('messages.profile.title') }}
+    </a>
+</div>
 
                             <!-- Logout -->
                             <div class="py-1">
@@ -244,7 +240,7 @@
     /* Notification badges */
     .relative .absolute {
         transform: translate(25%, -25%);
-    }
+    }ئ
 
     /* Responsive adjustments */
     @media (max-width: 768px) {
@@ -598,12 +594,18 @@
             loadQuickMessageUsers();
         }
     }
-    document.addEventListener('click', function(e) {
-        if (!document.getElementById('messagesButton').contains(e.target) &&
-            !document.getElementById('messagesDropdown').contains(e.target)) {
-            document.getElementById('messagesDropdown').classList.add('hidden');
-        }
-    });
+   document.addEventListener('click', function(e) {
+    const modal = document.getElementById('offer-modal');
+    if (modal && !modal.contains(e.target)) {
+        modal.classList.add('hidden');
+    }
+
+    const messagesDropdown = document.getElementById('messagesDropdown');
+    if (messagesDropdown && !messagesDropdown.contains(e.target)) {
+        messagesDropdown.classList.add('hidden');
+    }
+});
+
 </script>
 
 <script>
