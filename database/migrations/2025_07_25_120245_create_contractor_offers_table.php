@@ -6,26 +6,28 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up()
-{
-    Schema::create('contractor_offers', function (Blueprint $table) {
-        $table->id();
-        $table->foreignId('proposal_id')->constrained('project_proposals')->onDelete('cascade');
-        $table->foreignId('contractor_id')->constrained('users')->onDelete('cascade');
-        $table->decimal('price', 10, 2);
-        $table->integer('timeline');
-        $table->text('details')->nullable();
-        $table->string('pdf_file')->nullable();
-        $table->string('status')->default('pending');
-        $table->timestamps();
-    });
-}
+    {
+        if (!Schema::hasTable('contractor_offers')) {
+            Schema::create('contractor_offers', function (Blueprint $table) {
+                $table->id();
+                $table->unsignedBigInteger('proposal_id');
+                $table->unsignedBigInteger('contractor_id');
+                $table->decimal('price', 10, 2);
+                $table->integer('timeline');
+                $table->text('details')->nullable();
+                $table->string('pdf_file')->nullable();
+                $table->string('status')->default('pending');
+                $table->timestamps();
 
-public function down()
-{
-    Schema::dropIfExists('contractor_offers');
-}
+                $table->foreign('proposal_id')->references('id')->on('project_proposals')->onDelete('cascade');
+                $table->foreign('contractor_id')->references('id')->on('users')->onDelete('cascade');
+            });
+        }
+    }
+
+    public function down()
+    {
+        Schema::dropIfExists('contractor_offers');
+    }
 };
